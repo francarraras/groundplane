@@ -1,4 +1,5 @@
 import { APPROVAL_PRECEDENCE, APPROVAL_RANK, DISTRICT_PALETTE, PERMISSION_PRECEDENCE, PERMISSION_RANK, REGION_PALETTE } from "./constants.js";
+import { paletteIndex } from "../stableKey.js";
 import { asArray, attachEvidence, sortedUnique } from "./helpers.js";
 import { proofArtifactSummary } from "./project-workspaces.js";
 
@@ -26,7 +27,9 @@ function sourceIdsFromGraphSubject(subject = {}) {
 }
 
 export function graphRegion(node, index, state = {}) {
-  const palette = REGION_PALETTE[index % REGION_PALETTE.length];
+  // Palette slot is a hash of the node id, not its array index (#17), so
+  // inserting a node never recolours or re-orbits its neighbours.
+  const palette = REGION_PALETTE[paletteIndex(node.id, REGION_PALETTE.length)];
   const visual = node.visual || {};
   const weights = node.weights || {};
   return {
@@ -256,8 +259,8 @@ export function districtGravityRelationships(district, localRegions, localRelati
     });
 }
 
-function districtColor(nodes, index) {
-  return nodes.find((node) => node?.visual?.color)?.visual.color || DISTRICT_PALETTE[index % DISTRICT_PALETTE.length];
+function districtColor(nodes, key) {
+  return nodes.find((node) => node?.visual?.color)?.visual.color || DISTRICT_PALETTE[paletteIndex(key, DISTRICT_PALETTE.length)];
 }
 
 export function districtRegion(district, index, state = {}) {
@@ -291,7 +294,7 @@ export function districtRegion(district, index, state = {}) {
     health: district.weights.friction >= 0.55 ? "yellow" : "green",
     weight: Math.max(0.32, Math.min(1, district.weights.importance || 0.45)),
     color: district.visual.color,
-    orbit: REGION_PALETTE[index % REGION_PALETTE.length].orbit,
+    orbit: REGION_PALETTE[paletteIndex(district.id, REGION_PALETTE.length)].orbit,
     nextAction: district.summary,
     permissionMode,
     approvalStatus,
@@ -396,7 +399,7 @@ export function deriveDistricts(nodes, edges, clusters) {
           sensitivity: averageWeight(sortedNodes, "sensitivity", 0.2),
         },
         visual: {
-          color: districtColor(sortedNodes, index),
+          color: districtColor(sortedNodes, id),
           radius: 1.4 + Math.min(1.4, Math.max(0, sortedNodes.length - 1) * 0.22),
           labelPriority: 0.55 + Math.min(0.4, averageWeight(sortedNodes, "importance") * 0.4),
           position: null,

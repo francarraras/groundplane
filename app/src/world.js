@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { unitFraction } from "./stableKey.js";
 
 const TAU = Math.PI * 2;
 const DEFAULT_COLOR = "#39d9c2";
@@ -101,9 +102,11 @@ export function buildWorldNodes(model) {
   const regions = Array.isArray(model?.regions) ? model.regions : [];
   const graphNodes = Array.isArray(model?.nodes) ? model.nodes : [];
   const worldRegions = regions.length > 0 ? regions : graphNodes;
-  // Order-stable placement: sort by id so identical data renders identical
-  // positions regardless of upstream array ordering (spatial memory survives
-  // graph rebuilds). Byte comparison, not localeCompare, for determinism.
+  // Insertion-stable placement: each node's angle is a hash of its own id, so
+  // adding or removing a node never moves its neighbours (spatial memory
+  // survives graph rebuilds — the precondition for pinning, #17). The id sort
+  // only fixes iteration/terrain order; it no longer drives positions. Byte
+  // comparison, not localeCompare, for determinism.
   const ordered = [...worldRegions].sort((a, b) => {
     const left = String(a?.id ?? "");
     const right = String(b?.id ?? "");
@@ -111,7 +114,6 @@ export function buildWorldNodes(model) {
     if (left > right) return 1;
     return 0;
   });
-  const count = Math.max(ordered.length, 1);
   const pins =
     model?.layoutPins && typeof model.layoutPins === "object" && !Array.isArray(model.layoutPins)
       ? model.layoutPins
@@ -120,7 +122,7 @@ export function buildWorldNodes(model) {
 
   return ordered.map((region, index) => {
     const id = region?.id || `region-${index + 1}`;
-    const angle = (index / count) * TAU - Math.PI / 2;
+    const angle = unitFraction(id) * TAU - Math.PI / 2;
     const orbit = 3.2 + finiteNumber(region?.orbit, 1) * 3.15;
     const weight = Math.max(MIN_WEIGHT, finiteNumber(region?.weight, DEFAULT_WEIGHT));
     const radius = 0.12 + weight * 0.2;

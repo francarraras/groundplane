@@ -1,5 +1,6 @@
 import { buildEvidenceModel } from "../evidence.js";
 import { REGION_PALETTE } from "./constants.js";
+import { paletteIndex } from "../stableKey.js";
 
 function statusWeight(status, health) {
   if (status === "active" && health !== "green") return 1;
@@ -33,7 +34,7 @@ export function evidenceContext(state = {}) {
 }
 
 export function projectRegion(project, index) {
-  const palette = REGION_PALETTE[index % REGION_PALETTE.length];
+  const palette = REGION_PALETTE[paletteIndex(project.id, REGION_PALETTE.length)];
   return {
     id: project.id,
     type: "project",
@@ -50,7 +51,7 @@ export function projectRegion(project, index) {
 }
 
 export function routineRegion(routine, index) {
-  const palette = REGION_PALETTE[(index + 3) % REGION_PALETTE.length];
+  const palette = REGION_PALETTE[paletteIndex(`routine:${routine.id}`, REGION_PALETTE.length)];
   const steps = asArray(routine.steps);
   return {
     id: routine.id,
