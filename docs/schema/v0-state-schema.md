@@ -49,3 +49,9 @@ The future V1 cockpit should read app state in this order:
 - Every source catalog entry must point to an existing raw source path.
 - No automatic memory promotion in V0.
 - Finance and contacts stay as future placeholders until permissioning is proven.
+
+## Layout overlay (added in Groundplane v0.1)
+
+| File | Format | Purpose |
+| --- | --- | --- |
+| `state/layout.json` | JSON | Optional user-owned spatial overlay: `pins` maps a map node id to `{x, z}`. Authored, never generated; the app renders without it. |

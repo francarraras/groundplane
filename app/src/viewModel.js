@@ -1506,6 +1506,34 @@ export function buildSurfaceModel(state) {
   );
   const lockedDecisions = asArray(state?.decisions?.decisions).filter((decision) => decision.status === "locked");
 
+  // User-owned layout overlay (state/layout.json): pinned node positions.
+  const layoutPins =
+    state?.layout && typeof state.layout === "object" && !Array.isArray(state.layout) && state.layout.pins
+      ? { ...state.layout.pins }
+      : {};
+
+  // Nodes touched by pending review packets: the review node itself, every
+  // node it shares an edge with, and any district containing one of those.
+  const pendingReviewNodeIds = (() => {
+    const affected = new Set();
+    pendingReviews.forEach((review) => {
+      const reviewNodeId = `review:${review.id}`;
+      affected.add(reviewNodeId);
+      graphRelationshipList.forEach((relationship) => {
+        if (relationshipTouches(relationship, reviewNodeId)) {
+          if (relationship.from) affected.add(relationship.from);
+          if (relationship.to) affected.add(relationship.to);
+        }
+      });
+    });
+    districts.forEach((district) => {
+      if (asArray(district.nodeIds).some((nodeId) => affected.has(nodeId))) {
+        affected.add(district.id);
+      }
+    });
+    return [...affected].sort();
+  })();
+
   const currentFocus = activeProject || regions[0] || {
     id: "empty",
     title: "No active region",
@@ -1592,6 +1620,8 @@ export function buildSurfaceModel(state) {
     proofLauncher,
     projectWorkspaces,
     pendingReviews,
+    layoutPins,
+    pendingReviewNodeIds,
     assistantBrief,
     systemHomeCockpit,
     todayCommandSurface,

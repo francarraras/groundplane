@@ -101,9 +101,24 @@ export function buildWorldNodes(model) {
   const regions = Array.isArray(model?.regions) ? model.regions : [];
   const graphNodes = Array.isArray(model?.nodes) ? model.nodes : [];
   const worldRegions = regions.length > 0 ? regions : graphNodes;
-  const count = Math.max(worldRegions.length, 1);
+  // Order-stable placement: sort by id so identical data renders identical
+  // positions regardless of upstream array ordering (spatial memory survives
+  // graph rebuilds). Byte comparison, not localeCompare, for determinism.
+  const ordered = [...worldRegions].sort((a, b) => {
+    const left = String(a?.id ?? "");
+    const right = String(b?.id ?? "");
+    if (left < right) return -1;
+    if (left > right) return 1;
+    return 0;
+  });
+  const count = Math.max(ordered.length, 1);
+  const pins =
+    model?.layoutPins && typeof model.layoutPins === "object" && !Array.isArray(model.layoutPins)
+      ? model.layoutPins
+      : {};
+  const pendingIds = new Set(Array.isArray(model?.pendingReviewNodeIds) ? model.pendingReviewNodeIds : []);
 
-  return worldRegions.map((region, index) => {
+  return ordered.map((region, index) => {
     const id = region?.id || `region-${index + 1}`;
     const angle = (index / count) * TAU - Math.PI / 2;
     const orbit = 3.2 + finiteNumber(region?.orbit, 1) * 3.15;
@@ -111,6 +126,9 @@ export function buildWorldNodes(model) {
     const radius = 0.12 + weight * 0.2;
     const altitude = 0.22 + weight * 0.78;
     const districtRadius = 1 + weight * 1.12;
+    const pin = pins[id];
+    const pinned = Boolean(pin) && Number.isFinite(pin.x) && Number.isFinite(pin.z);
+    const pinLimit = TERRAIN_HALF - 2.4;
 
     return {
       id,
@@ -122,11 +140,19 @@ export function buildWorldNodes(model) {
       altitude,
       districtRadius,
       weight,
-      position: {
-        x: Math.cos(angle) * orbit,
-        y: altitude,
-        z: Math.sin(angle) * orbit,
-      },
+      pinned,
+      pendingReview: pendingIds.has(id),
+      position: pinned
+        ? {
+            x: clamp(pin.x, -pinLimit, pinLimit),
+            y: altitude,
+            z: clamp(pin.z, -pinLimit, pinLimit),
+          }
+        : {
+            x: Math.cos(angle) * orbit,
+            y: altitude,
+            z: Math.sin(angle) * orbit,
+          },
     };
   });
 }
@@ -487,6 +513,25 @@ export function createWorldScene(root, model, callbacks = {}) {
     ridge.rotation.x = -Math.PI / 2;
 
     group.add(field, ridge);
+
+    if (node.pendingReview) {
+      const approvalRing = new THREE.Mesh(
+        new THREE.RingGeometry(node.districtRadius * 1.08, node.districtRadius * 1.3, 96),
+        new THREE.MeshBasicMaterial({
+          color: 0xf0b86d,
+          transparent: true,
+          opacity: 0.55,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+        }),
+      );
+      approvalRing.rotation.x = -Math.PI / 2;
+      approvalRing.position.y = 0.02;
+      group.add(approvalRing);
+      group.userData.approvalRing = approvalRing;
+    }
+
     return group;
   }
 
@@ -774,6 +819,9 @@ export function createWorldScene(root, model, callbacks = {}) {
       const selectedBoost = node?.id === focusState.selectedId || node?.id === districtPulse.districtId ? 0.032 : 0;
       const pulse = 1 + selectedBoost + Math.sin(elapsed * 0.45 + index * 0.7) * 0.018;
       district.scale.setScalar(pulse);
+      if (district.userData.approvalRing) {
+        district.userData.approvalRing.material.opacity = 0.52 + Math.sin(elapsed * 2.2 + index) * 0.28;
+      }
     });
 
     nodeEntries.forEach((entry, index) => {
@@ -782,6 +830,10 @@ export function createWorldScene(root, model, callbacks = {}) {
       entry.halo.position.copy(entry.core.position);
       const haloScale = 1 + Math.sin(elapsed * 1.25 + index) * 0.07;
       entry.halo.scale.setScalar(haloScale);
+      if (entry.approvalRing) {
+        entry.approvalRing.material.opacity = 0.34 + Math.sin(elapsed * 2.2 + index) * 0.2;
+        entry.approvalRing.scale.setScalar(1 + Math.sin(elapsed * 1.6 + index * 0.5) * 0.06);
+      }
     });
 
     emitLabels();

@@ -183,3 +183,18 @@ class StateSchemaContractTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LayoutOverlayContractTest(unittest.TestCase):
+    def test_layout_overlay_is_optional_but_valid_when_present(self):
+        path = ROOT / "state" / "layout.json"
+        if not path.exists():
+            self.skipTest("layout overlay not present")
+        data = json.loads(path.read_text())
+        self.assertEqual(data["schema_version"], "layout.v1")
+        pins = data.get("pins", {})
+        self.assertIsInstance(pins, dict)
+        for node_id, pin in pins.items():
+            self.assertIsInstance(node_id, str)
+            self.assertTrue(isinstance(pin.get("x"), (int, float)), f"{node_id} pin.x must be numeric")
+            self.assertTrue(isinstance(pin.get("z"), (int, float)), f"{node_id} pin.z must be numeric")

@@ -1,16 +1,20 @@
 export const DATA_URLS = {
-  board: "/state/board.json",
-  projects: "/state/projects.json",
-  tasks: "/state/tasks.json",
-  proofArtifacts: "/state/proof-artifacts.json",
-  routines: "/state/routines.json",
-  decisions: "/state/decisions.json",
-  reviews: "/reviews/queue.json",
-  memoryClaims: "/wiki/memory-claims.json",
-  sources: "/sources/catalog.json",
-  permissions: "/state/permissions.json",
-  relationshipGraph: "/indexes/relationship-graph.json",
+  board: "../state/board.json",
+  projects: "../state/projects.json",
+  tasks: "../state/tasks.json",
+  proofArtifacts: "../state/proof-artifacts.json",
+  routines: "../state/routines.json",
+  decisions: "../state/decisions.json",
+  reviews: "../reviews/queue.json",
+  memoryClaims: "../wiki/memory-claims.json",
+  sources: "../sources/catalog.json",
+  permissions: "../state/permissions.json",
+  relationshipGraph: "../indexes/relationship-graph.json",
+  layout: "../state/layout.json",
 };
+
+// Optional files: the app renders without them and falls back gracefully.
+const OPTIONAL_KEYS = new Set(["relationshipGraph", "layout"]);
 
 export async function fetchJson(fetchImpl, url, { cacheBust = true } = {}) {
   const requestUrl = cacheBust ? `${url}?t=${Date.now()}` : url;
@@ -54,8 +58,15 @@ function unavailableRelationshipGraph(error) {
   };
 }
 
+function emptyLayoutOverlay() {
+  return {
+    schema_version: "layout.v1",
+    pins: {},
+  };
+}
+
 export async function loadProductState(fetchImpl = fetch, options = {}) {
-  const requiredUrls = Object.entries(DATA_URLS).filter(([key]) => key !== "relationshipGraph");
+  const requiredUrls = Object.entries(DATA_URLS).filter(([key]) => !OPTIONAL_KEYS.has(key));
   const entries = await Promise.all(
     requiredUrls.map(async ([key, url]) => [
       key,
@@ -70,8 +81,16 @@ export async function loadProductState(fetchImpl = fetch, options = {}) {
     relationshipGraph = unavailableRelationshipGraph(error);
   }
 
+  let layout;
+  try {
+    layout = await fetchJson(fetchImpl, DATA_URLS.layout, options);
+  } catch (error) {
+    layout = emptyLayoutOverlay();
+  }
+
   return {
     ...Object.fromEntries(entries),
     relationshipGraph,
+    layout,
   };
 }

@@ -49,17 +49,19 @@ const model = {
 const nodes = buildWorldNodes(model);
 
 assert.equal(nodes.length, 3);
-assert.equal(nodes[0].id, "career");
-assert.equal(nodes[0].label, "Career");
-assert.ok(Number.isFinite(nodes[0].position.x));
-assert.ok(Number.isFinite(nodes[0].position.y));
-assert.ok(Number.isFinite(nodes[0].position.z));
-assert.ok(nodes[0].radius > nodes[1].radius);
+const careerNode = nodes.find((node) => node.id === "career");
+const healthNode = nodes.find((node) => node.id === "health");
+assert.ok(careerNode && healthNode);
+assert.equal(careerNode.label, "Career");
+assert.ok(Number.isFinite(careerNode.position.x));
+assert.ok(Number.isFinite(careerNode.position.y));
+assert.ok(Number.isFinite(careerNode.position.z));
+assert.ok(careerNode.radius > healthNode.radius);
 assert.ok(nodes.every((node) => node.color.startsWith("#")));
 assert.ok(nodes.every((node) => Number.isFinite(node.altitude)));
 assert.ok(nodes.every((node) => node.districtRadius > node.radius));
-assert.equal(nodes[1].type, "cadence");
-assert.ok(terrainHeightAt(nodes[0].position.x, nodes[0].position.z, nodes) > terrainHeightAt(16, 16, nodes));
+assert.equal(healthNode.type, "cadence");
+assert.ok(terrainHeightAt(careerNode.position.x, careerNode.position.z, nodes) > terrainHeightAt(16, 16, nodes));
 
 const graphModel = {
   nodes: [
@@ -803,9 +805,10 @@ const districtWorldNodes = buildWorldNodes({
     },
   ],
 });
-assert.equal(districtWorldNodes[0].sourceType, "district");
-assert.equal(districtWorldNodes[0].type, "district");
-assert.equal(districtWorldNodes[0].label, "Career");
+const careerDistrictNode = districtWorldNodes.find((node) => node.id === "district:career");
+assert.equal(careerDistrictNode.sourceType, "district");
+assert.equal(careerDistrictNode.type, "district");
+assert.equal(careerDistrictNode.label, "Career");
 
 const districtWorldLinks = buildWorldLinks(
   {
@@ -1636,5 +1639,31 @@ assert.doesNotMatch(
 assert.match(mainSource, /world\?\.setFocusState/);
 assert.match(mainSource, /renderWorldLabels\(elements\.worldLabels, latestWorldLabels, currentFocusContext\(\)\)/);
 assert.match(mainSource, /buildFocusContext\(model,\s*selectedId,\s*hoveredId,\s*selectedRelationshipId\)/);
+
+
+// Order-stable layout (#17): identical data in any array order renders identical positions.
+const stabilityForward = buildWorldNodes({ regions: [...model.regions] });
+const stabilityReversed = buildWorldNodes({ regions: [...model.regions].reverse() });
+stabilityForward.forEach((node) => {
+  const twin = stabilityReversed.find((candidate) => candidate.id === node.id);
+  assert.ok(twin, `stability twin missing for ${node.id}`);
+  assert.equal(twin.position.x, node.position.x);
+  assert.equal(twin.position.z, node.position.z);
+});
+
+// Layout overlay pins (#14) and pending-approval flags (#15).
+const overlayNodes = buildWorldNodes({
+  regions: [...model.regions],
+  layoutPins: { career: { x: 2.5, z: -3.25 }, ignored: { x: 1, z: 1 } },
+  pendingReviewNodeIds: ["health"],
+});
+const pinnedCareer = overlayNodes.find((node) => node.id === "career");
+assert.equal(pinnedCareer.pinned, true);
+assert.equal(pinnedCareer.position.x, 2.5);
+assert.equal(pinnedCareer.position.z, -3.25);
+assert.equal(pinnedCareer.pendingReview, false);
+const flaggedHealth = overlayNodes.find((node) => node.id === "health");
+assert.equal(flaggedHealth.pinned, false);
+assert.equal(flaggedHealth.pendingReview, true);
 
 console.log("product world model ok");
