@@ -77,8 +77,7 @@ Around a hundred contract tests guard the state schemas, the permission matrix, 
 
 - Approving a packet updates the queue; applying the change to state files is an operator-side step, not automated.
 - Pins are authored in `state/layout.json` (the map honors them live); in-app drag-to-pin with layout export is on the roadmap.
-- No LLM integration ships in this repo — by design the surface is deterministic; an operator CLI (`ask`/`propose` through the same review gate) is the next milestone.
-- Two large modules (`app/src/instruments.js`, `app/src/viewModel.js`) predate the module split planned in the issue tracker.
+- No LLM runs in the browser — the cockpit is deterministic and read-only. Reasoning lives in the operator CLI (`packages/operator`): `ask` ships and works offline (a deterministic mock and a local Ollama adapter, plus a hosted Anthropic adapter), writing read-only run packets under `runs/`. `propose` (agent-drafted changes through the same review gate) is the next milestone.
 
 ## Compared to…
 
@@ -86,7 +85,7 @@ Obsidian/Notion graph views visualize notes but have no operational objects, no 
 
 ## Roadmap (near-term)
 
-In-app drag-to-pin with layout export · region → context-bundle export · operator CLI (`ask`, `propose`) with Anthropic/Ollama adapters writing through the existing review gate · fixture-based browser QA. See the issue tracker for the full backlog.
+Operator CLI `propose` (agent-drafted changes through the existing review gate) · in-app drag-to-pin with layout export · fixture-based browser QA · JSON Schemas + ajv validation. See the issue tracker for the full backlog.
 
 ## Docs
 

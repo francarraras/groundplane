@@ -4,6 +4,9 @@
   "description": "Local-first cockpit for agent-operated work: plain JSON files compiled into an explorable spatial map with evidence trails, permission modes, and an approval queue. Read-only by design.",
   "license": "MIT",
   "type": "module",
+  "bin": {
+    "atlas": "packages/operator/cli.js"
+  },
   "scripts": {
     "app:dev": "vite --host 127.0.0.1",
     "app:local": "vite --host 127.0.0.1 --port 5175 --strictPort",
@@ -15,8 +18,10 @@
     "test:graph": "node scripts/verify-relationship-graph.mjs",
     "test:product-world": "node scripts/verify-product-world-model.mjs",
     "test:context-bundle": "node scripts/verify-context-bundle.mjs",
+    "test:operator": "node scripts/verify-operator-ask.mjs",
+    "operator": "node packages/operator/cli.js",
     "leak:scan": "node scripts/leak-scan.mjs",
-    "verify:local": "npm run graph:build && npm run test:python && npm run test:product-world && npm run test:graph && npm run test:context-bundle && npm run leak:scan && npm run app:build"
+    "verify:local": "npm run graph:build && npm run test:python && npm run test:product-world && npm run test:graph && npm run test:context-bundle && npm run test:operator && npm run leak:scan && npm run app:build"
   },
   "dependencies": {
     "three": "^0.184.0"
