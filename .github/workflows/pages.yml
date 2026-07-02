@@ -1,9 +1,9 @@
 name: pages
 
+# Manual trigger only: run from the Actions tab whenever you want to (re)deploy
+# the demo. Kept off push so a flaky first-time Pages provisioning never marks
+# regular commits red.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
