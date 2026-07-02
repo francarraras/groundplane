@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import assert from "node:assert/strict";
 import * as world from "../app/src/world.js";
 import {
@@ -1102,7 +1102,14 @@ assert.match(shellMainSource, /const label = inspectorCollapsed \? "Show Details
 assert.match(shellMainSource, /aria-pressed", inspectorCollapsed \? "false" : "true"/);
 assert.match(shellMainSource, /toggleState = inspectorCollapsed \? "idle" : "pressed"/);
 
-const instrumentsSource = readFileSync(new URL("../app/src/instruments.js", import.meta.url), "utf8");
+const instrumentsDir = new URL("../app/src/instruments/", import.meta.url);
+const instrumentsSource = [
+  readFileSync(new URL("../app/src/instruments.js", import.meta.url), "utf8"),
+  ...readdirSync(instrumentsDir)
+    .filter((file) => file.endsWith(".js"))
+    .sort()
+    .map((file) => readFileSync(new URL(file, instrumentsDir), "utf8")),
+].join("\n");
 assert.match(instrumentsSource, /\.district-breadcrumb:not\(:empty\)/);
 assert.doesNotMatch(instrumentsSource, /LABEL_EXCLUSION_CACHE_MS|measureLabelExclusionsCached|__worldLabelExclusionCache/);
 assert.match(instrumentsSource, /function\s+renderEvidenceTrail/);

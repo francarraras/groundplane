@@ -6,6 +6,21 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "app"
+INSTRUMENTS = APP / "src" / "instruments"
+
+
+def _instruments_source():
+    """Concatenate the instruments barrel and its per-panel modules.
+
+    instruments.js was split into app/src/instruments/*.js (issue #10). The
+    contract assertions check for literal source substrings that now live in
+    those modules, so they are read together as one logical source.
+    """
+    parts = [(APP / "src" / "instruments.js").read_text()]
+    if INSTRUMENTS.is_dir():
+        for module in sorted(INSTRUMENTS.glob("*.js")):
+            parts.append(module.read_text())
+    return "\n".join(parts)
 
 
 class ProductAppContractTest(unittest.TestCase):
@@ -98,7 +113,7 @@ class ProductAppContractTest(unittest.TestCase):
 
     def test_world_and_instrument_scaffolds_expose_expected_exports(self):
         world_js = (APP / "src" / "world.js").read_text()
-        instruments_js = (APP / "src" / "instruments.js").read_text()
+        instruments_js = _instruments_source()
         self.assertIn('from "three"', world_js)
         self.assertIn("createWorldScene", world_js)
         self.assertIn("buildWorldNodes", world_js)
@@ -171,7 +186,7 @@ class ProductAppContractTest(unittest.TestCase):
             ".atlas-rail",
             "color-mix",
         ]:
-            self.assertIn(value, css + (APP / "src" / "instruments.js").read_text())
+            self.assertIn(value, css + _instruments_source())
 
     def test_desktop_cockpit_uses_progressive_disclosure(self):
         index_html = (APP / "index.html").read_text()
@@ -192,7 +207,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIn('inspectorCollapsed ? "idle" : "pressed"', main)
         self.assertIn('elements.inspectorToggle?.addEventListener("click"', main)
 
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("renderCommandDeck", instruments)
         self.assertIn("command-deck-primary", instruments)
         self.assertIn("<details", instruments)
@@ -225,7 +240,7 @@ class ProductAppContractTest(unittest.TestCase):
         )
 
     def test_atlas_rail_resting_state_is_bounded(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("ATLAS_RAIL_REST_LIMIT", instruments)
         self.assertIn("const primaryRegions = regions.slice(0, ATLAS_RAIL_REST_LIMIT)", instruments)
         self.assertIn("selectedRegionItem", instruments)
@@ -254,7 +269,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertNotIn(".rail-overflow-hint", css)
 
     def test_atlas_rail_labels_are_single_line_and_tooltipped(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn('aria-label="${escapeHtml(`Open ${regionTitle}. ${regionSubtitle}`)}"', instruments)
         self.assertIn("function publicTitle", instruments)
         self.assertIn(
@@ -276,7 +291,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.region-copy small\s*\{[\s\S]*white-space:\s*nowrap")
 
     def test_command_deck_has_decision_card_hierarchy(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("renderDecisionCard", instruments)
         self.assertIn('class="decision-card"', instruments)
         self.assertIn('class="decision-card-lede"', instruments)
@@ -327,7 +342,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.decision-card-detail:not\(\[open\]\) \.decision-card-context\s*\{[\s\S]*display:\s*none")
 
     def test_system_home_cockpit_is_first_class_read_only_surface(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         view_model = (APP / "src" / "viewModel.js").read_text()
         css = (APP / "src" / "styles.css").read_text()
 
@@ -355,7 +370,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.system-home-tile\s*\{[\s\S]*min-height:\s*86px")
 
     def test_today_command_surface_is_first_class_read_only_surface(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         view_model = (APP / "src" / "viewModel.js").read_text()
         css = (APP / "src" / "styles.css").read_text()
 
@@ -381,7 +396,7 @@ class ProductAppContractTest(unittest.TestCase):
     def test_spatial_command_overlay_integrates_today_with_map(self):
         html = (APP / "index.html").read_text()
         main = (APP / "src" / "main.js").read_text()
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         view_model = (APP / "src" / "viewModel.js").read_text()
         css = (APP / "src" / "styles.css").read_text()
 
@@ -440,7 +455,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.focus-card span\s*\{[\s\S]*font-size:\s*0\.72rem")
 
     def test_command_deck_default_state_is_compact(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn('class="command-deck-header"', instruments)
         self.assertIn("command-deck-status", instruments)
         self.assertIn('data-command-priority="primary"', instruments)
@@ -478,7 +493,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIn("max-height: 280px", css)
 
     def test_area_detail_system_has_compact_brief_before_drawers(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function areaBriefModel", instruments)
         self.assertIn("function renderAreaBrief", instruments)
         self.assertIn('class="area-brief"', instruments)
@@ -518,7 +533,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIn("read-only project workspace", view_model)
         self.assertIn("No additional source reads", view_model)
 
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function renderProjectWorkspacePanel", instruments)
         self.assertIn("function renderProjectContextUsageLoop", instruments)
         self.assertIn('class="project-workspace-panel"', instruments)
@@ -553,7 +568,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.command-deck:has\(\.command-deck-drawer\[open\]\) \.project-workspace-panel\s*\{[\s\S]*display:\s*none")
 
     def test_district_focus_summary_is_collapsed_first(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function districtSummaryBrief", instruments)
         self.assertIn("function districtSummaryLabel", instruments)
         self.assertIn('class="district-focus-head"', instruments)
@@ -578,7 +593,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.district-summary-detail:not\(\[open\]\) \.district-summary-detail-body\s*\{[\s\S]*display:\s*none")
 
     def test_command_deck_is_decision_first(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn(
             "const fullRegionTitle = publicTitle(region.title || region.id || \"Untitled focus\", \"Untitled focus\")",
             instruments,
@@ -622,7 +637,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.command-deck-status \.status-pill\s*\{[\s\S]*color:\s*transparent")
 
     def test_command_deck_compacts_sentence_like_entity_titles(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function entityIdSuffix", instruments)
         self.assertIn("function isSentenceLikeText", instruments)
         self.assertIn("function compactEntityTitle", instruments)
@@ -639,7 +654,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIn("return `${type} ${suffix}`.trim()", instruments)
 
     def test_slug_like_titles_render_as_human_names(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         main = (APP / "src" / "main.js").read_text()
 
         self.assertIn("function publicTitle", instruments)
@@ -711,7 +726,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertNotIn(".guide-steps", css)
 
     def test_command_deck_drawers_are_glanceable_disclosure_chips(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function drawerLabel", instruments)
         self.assertIn('relationships: "Connections"', instruments)
         self.assertIn('sources: "Evidence"', instruments)
@@ -746,7 +761,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.command-deck-drawer:not\(\[open\]\) \.command-deck-drawer-body\s*\{[\s\S]*display:\s*none")
 
     def test_command_deck_groups_secondary_panels_behind_more(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function secondaryCommandPanel", instruments)
         self.assertIn("const secondaryPanels = [", instruments)
         self.assertIn('secondaryCommandPanel("proof"', instruments)
@@ -768,7 +783,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIn(".secondary-command-detail summary:focus-visible", css)
 
     def test_approval_drawer_uses_compact_history_disclosure(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function approvalFlowModel", instruments)
         self.assertIn("function renderApprovalFlowPanel", instruments)
         self.assertIn("approval-flow-panel", instruments)
@@ -811,7 +826,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.approval-history-drawer:not\(\[open\]\) \.approval-history-list\s*\{[\s\S]*display:\s*none")
 
     def test_proof_drawer_uses_compact_dossier_disclosure(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("proof-summary-strip", instruments)
         self.assertIn("proof-dossier-detail", instruments)
         self.assertIn("proof-dossier-body", instruments)
@@ -836,7 +851,7 @@ class ProductAppContractTest(unittest.TestCase):
 
     def test_proof_launcher_is_read_only_and_actionable(self):
         view_model = (APP / "src" / "viewModel.js").read_text()
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         main = (APP / "src" / "main.js").read_text()
         css = (APP / "src" / "styles.css").read_text()
 
@@ -867,7 +882,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.proof-launcher-action code\s*\{[\s\S]*overflow-wrap:\s*anywhere")
 
     def test_action_drawer_uses_compact_route_disclosure(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function actionFlowModel", instruments)
         self.assertIn("function renderActionFlowPanel", instruments)
         self.assertIn("action-flow-panel", instruments)
@@ -923,7 +938,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.action-overflow-detail:not\(\[open\]\) \.action-route-overflow-list\s*\{[\s\S]*display:\s*none")
 
     def test_connection_details_use_plain_labels(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function connectionLensModel", instruments)
         self.assertIn("function renderConnectionLens", instruments)
         self.assertIn("connection-lens-panel", instruments)
@@ -957,7 +972,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.connection-path-preview\s*\{[\s\S]*max-height:")
 
     def test_source_drawer_uses_compact_record_disclosure(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function compactEvidenceSignal", instruments)
         self.assertIn("evidence-trail-head", instruments)
         self.assertIn("evidence-note-detail", instruments)
@@ -976,7 +991,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.source-records-detail:not\(\[open\]\) \.source-record-list\s*\{[\s\S]*display:\s*none")
 
     def test_top_command_uses_scan_friendly_signal_chips(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("renderSystemPulse", instruments)
         self.assertIn("systemPulseItems", instruments)
         self.assertIn("function decisionPulseItems", instruments)
@@ -1030,7 +1045,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.command-deck-drawer summary:hover[\s\S]*background:\s*rgba\(255,\s*255,\s*255,\s*0\.06\)")
 
     def test_bottom_instruments_are_single_row_compact_dock(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("const visibleModes = modes.slice(0, 3)", instruments)
         self.assertIn("const modeLabel = String(mode || \"Mode\")", instruments)
         self.assertIn("truncateText(modeLabel, 9)", instruments)
@@ -1053,7 +1068,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.mode-button\s*\{[\s\S]*text-overflow:\s*ellipsis")
 
     def test_world_labels_are_compact_accessible_markers(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn("function labelDisplayText", instruments)
         self.assertIn("function labelDisplayName", instruments)
         self.assertIn("function isSentenceLikeLabel", instruments)
@@ -1078,7 +1093,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.world-label:not\(\[data-label-role=\"selected\"\]\)\s*\{[\s\S]*padding:\s*6px\s+9px")
 
     def test_system_drawer_uses_compact_readout_grid(self):
-        instruments = (APP / "src" / "instruments.js").read_text()
+        instruments = _instruments_source()
         self.assertIn('class="system-readout system-readout-grid"', instruments)
         self.assertIn("system-integrity-detail", instruments)
         self.assertIn("system-integrity-grid", instruments)
@@ -1160,7 +1175,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertNotIn("visual gravity", query_js)
 
     def test_product_app_cannot_persist_review_queue_items(self):
-        app_sources = "\n".join(path.read_text() for path in (APP / "src").glob("*.js"))
+        app_sources = "\n".join(path.read_text() for path in (APP / "src").glob("**/*.js"))
         self.assertNotIn("localStorage.setItem", app_sources)
         self.assertNotIn("sessionStorage.setItem", app_sources)
         self.assertNotIn("indexedDB", app_sources)
