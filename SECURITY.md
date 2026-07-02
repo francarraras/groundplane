@@ -4,8 +4,8 @@ Groundplane is a **local-first, single-user** tool. Understanding what that does
 
 ## Guarantees (enforced by code + tests)
 
-- **The browser surface writes nothing.** No localStorage/sessionStorage/indexedDB, no POST/PUT/PATCH/DELETE, no beacons, no cookies. Contract tests scan the app source and fail if any mutation API appears.
-- **The only write path is the review gate.** Queue entries are shape-validated, path-allowlisted (traversal-safe, repo-relative), deduplicated, and require explicit human resolution with actor/reason/undo recorded.
+- **The browser surface writes nothing.** No localStorage/sessionStorage/indexedDB, no POST/PUT/PATCH/DELETE, no beacons, no cookies. This is enforced two ways: contract tests scan the app source (`tests/test_product_app_contract.py`) and fail if any mutation API appears, and a fixture-based browser-QA test (`tests/e2e/browser-qa.spec.js`) drives the running app in a headless browser and fails if any storage or non-GET-fetch write executes at runtime. The list of permitted storage keys (`tests/e2e/allowed-storage-keys.js`) is empty — adding an unauthorized write breaks CI.
+- **The only write path is the review gate.** Queue entries are shape-validated, path-allowlisted (traversal-safe, repo-relative), deduplicated, and require explicit human resolution with actor/reason/undo recorded. The operator CLI (`atlas propose`/`approve`) routes agent-drafted changes through this same validator.
 - **No telemetry, no network calls.** The app's only I/O is `fetch()` of local JSON from the local dev server. There are no analytics, no external requests, no accounts.
 - **Leak scanning in CI.** Every push is scanned for secret-shaped strings (API keys, tokens, private-key blocks), absolute home paths, and email addresses (reserved `.example`-style fiction domains excepted). Deployment-specific denylist words are injected via the `LEAK_SCAN_EXTRA` CI secret so the denylist itself never ships.
 
