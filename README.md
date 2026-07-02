@@ -4,7 +4,7 @@
 
 Groundplane is a local-first cockpit for agent-operated work. It compiles plain JSON files — your projects, tasks, decisions, sources, and approvals — into an explorable spatial map with evidence trails, permission modes, and a review queue. The human surface is **read-only by design**: the browser app provably writes nothing, and an agent can only change your workspace through validated, human-approved review packets.
 
-> Demo GIF coming with v0.1.0 — run the 60-second quickstart below to see it live.
+![The Groundplane demo workspace. The gold ring marks an area holding a pending review packet — approvals are visible in place, on the map. Pinned areas stay exactly where you put them.](docs/media/demo-home.png)
 
 ## Why
 
@@ -25,8 +25,11 @@ Things to try:
 
 1. Fly the map — clusters are domains of work; click any node for details.
 2. Open a task's **evidence trail** — every claim resolves to a registered source.
-3. Open **Reviews** — one packet is pending: the operator proposes a change, and it is not applied until a human resolves it.
-4. Kill the server, open the JSON in `state/` — that's the whole database.
+3. Find the **gold approval ring** on the map — that area holds a pending review packet. Drill in and the packet itself wears the ring; open **Reviews** to read it. The operator proposed a change, and nothing applies until a human resolves it.
+4. Edit `state/layout.json` — pin any node, reload, it stays where you put it. Spatial memory is a file you own.
+5. Kill the server, open the JSON in `state/` — that's the whole database.
+
+![Drilling into the ringed area: the pending packet, evidence-linked and waiting for clearance.](docs/media/demo-approval.png)
 
 ## How it works
 
@@ -73,7 +76,7 @@ Around a hundred contract tests guard the state schemas, the permission matrix, 
 ## Current limitations (honest list)
 
 - Approving a packet updates the queue; applying the change to state files is an operator-side step, not automated.
-- Node positions are computed per load; pinning/persistent layout is on the roadmap.
+- Pins are authored in `state/layout.json` (the map honors them live); in-app drag-to-pin with layout export is on the roadmap.
 - No LLM integration ships in this repo — by design the surface is deterministic; an operator CLI (`ask`/`propose` through the same review gate) is the next milestone.
 - Two large modules (`app/src/instruments.js`, `app/src/viewModel.js`) predate the module split planned in the issue tracker.
 
@@ -83,7 +86,7 @@ Obsidian/Notion graph views visualize notes but have no operational objects, no 
 
 ## Roadmap (near-term)
 
-Pinned/persistent layout · pending-approval halos on the map · region → context-bundle export · operator CLI (`ask`, `propose`) with Anthropic/Ollama adapters writing through the existing review gate. See the issue tracker for the full backlog.
+In-app drag-to-pin with layout export · region → context-bundle export · operator CLI (`ask`, `propose`) with Anthropic/Ollama adapters writing through the existing review gate · fixture-based browser QA. See the issue tracker for the full backlog.
 
 ## Docs
 

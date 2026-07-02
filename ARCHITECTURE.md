@@ -25,9 +25,9 @@ flowchart LR
 
 | Module | Role | Notes |
 |---|---|---|
-| `app/src/state.js` | The app's entire I/O: 11 `fetch()` GETs of local JSON | One 13-line URL constant; only the graph degrades gracefully today |
+| `app/src/state.js` | The app's entire I/O: 12 `fetch()` GETs of local JSON | One URL constant; the graph and the layout overlay are optional and degrade gracefully |
 | `app/src/viewModel.js` | Builds the surface model (brief, areas, workspaces, graph view) | Large (~1.7k lines); split planned |
-| `app/src/world.js` | Three.js scene: perspective camera over a 2.5D heightfield | Layout is deterministic radial placement — no RNG |
+| `app/src/world.js` | Three.js scene: perspective camera over a 2.5D heightfield | Order-stable (id-sorted) radial layout, no RNG; honors `state/layout.json` pins; renders gold approval rings on areas touched by pending packets |
 | `app/src/instruments.js` | DOM rendering: inspector, approvals, operator panel, palette | Largest module (~3.3k lines); split planned |
 | `app/src/evidence.js` | Resolves source IDs → evidence trails, permission-aware actions | |
 | `app/src/reviewDraft.js` | Builds review-packet *previews* in the browser — never persists | |
@@ -43,7 +43,7 @@ flowchart LR
 
 ## Determinism
 
-The compiler sorts nodes, edges, and clusters; derives `generated_at` from the max timestamp in the inputs; and uses no RNG, wall clock, or directory ordering. CI rebuilds the committed graph and fails on any byte difference. The map layout in `world.js` is a deterministic function of the graph (radial rings by array order) — position stability under data *change* is a tracked issue.
+The compiler sorts nodes, edges, and clusters; derives `generated_at` from the max timestamp in the inputs; and uses no RNG, wall clock, or directory ordering. CI rebuilds the committed graph and fails on any byte difference. The map layout in `world.js` sorts nodes by id before placement, so identical data renders identical positions regardless of upstream array order; user pins in `state/layout.json` override computed positions entirely.
 
 ## Testing strategy
 
