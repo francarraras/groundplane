@@ -75,9 +75,9 @@ Around a hundred contract tests guard the state schemas, the permission matrix, 
 
 ## Current limitations (honest list)
 
-- Approving a packet updates the queue; applying the change to state files is an operator-side step, not automated.
+- The browser never applies changes: it renders pending packets and their halos, but resolving one runs through the operator CLI (`atlas approve`), which updates `reviews/queue.json` and rebuilds the graph outside the browser.
 - Pins are authored in `state/layout.json` (the map honors them live); in-app drag-to-pin with layout export is on the roadmap.
-- No LLM runs in the browser — the cockpit is deterministic and read-only. Reasoning lives in the operator CLI (`packages/operator`): `ask` ships and works offline (a deterministic mock and a local Ollama adapter, plus a hosted Anthropic adapter), writing read-only run packets under `runs/`. `propose` (agent-drafted changes through the same review gate) is the next milestone.
+- No LLM runs in the browser — the cockpit is deterministic and read-only. Reasoning lives in the operator CLI (`packages/operator`): `ask` works offline (a deterministic mock and a local Ollama adapter, plus a hosted Anthropic adapter) and writes read-only run packets under `runs/`; `propose`/`approve` route agent-drafted changes through the same review-packet validator as the browser, so the agent clears the same gate as everyone.
 
 ## Compared to…
 
@@ -85,7 +85,7 @@ Obsidian/Notion graph views visualize notes but have no operational objects, no 
 
 ## Roadmap (near-term)
 
-Operator CLI `propose` (agent-drafted changes through the existing review gate) · in-app drag-to-pin with layout export · fixture-based browser QA · JSON Schemas + ajv validation. See the issue tracker for the full backlog.
+In-app drag-to-pin with layout export · layout order-stability across rebuilds · fixture-based browser QA · JSON Schemas + ajv validation. See the issue tracker for the full backlog.
 
 ## Docs
 

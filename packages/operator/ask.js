@@ -3,45 +3,14 @@
 // under runs/ — rendered read-only in-app. Fail-closed: a failed or malformed
 // provider call writes NO run packet (only a "failed" line in the operations
 // log). The browser is never touched.
-import { mkdirSync, writeFileSync, renameSync, appendFileSync, rmSync } from "node:fs";
 import path from "node:path";
 import { loadWorkspaceState } from "./state.js";
 import { buildAskContext, buildMessages } from "./context.js";
 import { complete, providerName } from "./provider.js";
-
-function isoDate(now) {
-  return (now || new Date()).toISOString().slice(0, 10);
-}
-
-function isoStamp(now) {
-  return (now || new Date()).toISOString();
-}
+import { isoDate, isoStamp, writeJsonAtomic, appendOperationLog } from "./io.js";
 
 function runIdFor(now, seq = "001") {
   return `RUN-${isoDate(now)}-ASK-${seq}`;
-}
-
-function appendOperationLog(logPath, entry) {
-  mkdirSync(path.dirname(logPath), { recursive: true });
-  appendFileSync(logPath, `${JSON.stringify(entry)}\n`);
-}
-
-// Atomic write: stage a temp file then rename, so a crash mid-write never
-// leaves a partial run packet.
-function writeJsonAtomic(targetPath, value) {
-  mkdirSync(path.dirname(targetPath), { recursive: true });
-  const tempPath = `${targetPath}.tmp-${process.pid}-${Date.now()}`;
-  try {
-    writeFileSync(tempPath, `${JSON.stringify(value, null, 2)}\n`);
-    renameSync(tempPath, targetPath);
-  } catch (error) {
-    try {
-      rmSync(tempPath, { force: true });
-    } catch {
-      // best-effort cleanup
-    }
-    throw error;
-  }
 }
 
 export async function runAsk(options = {}) {

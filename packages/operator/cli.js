@@ -7,6 +7,8 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { runAsk } from "./ask.js";
+import { runPropose } from "./propose.js";
+import { runResolve } from "./approve.js";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
@@ -38,9 +40,14 @@ function usage() {
       "",
       "Usage:",
       '  atlas ask "<question>" [--region <cluster|node>] [--provider mock|ollama|anthropic] [--model <name>]',
+      '  atlas propose --summary "<change>" --sources SRC-a,SRC-b [--risk low|medium|high] [--diff "<summary>"]',
+      "  atlas approve <REV-id> [--decision approve|revise|reject] [--actor <name>] [--reason <text>] [--no-rebuild]",
       "",
       "Providers: mock (offline, default), ollama (local), anthropic (hosted; needs ANTHROPIC_API_KEY).",
       "Set a default with ATLAS_PROVIDER. See .env.example.",
+      "",
+      "propose emits a review packet through the same validator as the browser and",
+      "queues it as pending; approve resolves it and rebuilds the graph.",
     ].join("\n"),
   );
 }
@@ -76,6 +83,44 @@ async function main() {
         `${result.bundle.scope.id ? ` (${result.bundle.scope.id})` : ""} · sources: ${result.runPacket.source_ids.length}`,
     );
     console.log(`Run packet: ${path.relative(REPO_ROOT, result.runPath)}`);
+    return;
+  }
+
+  if (command === "propose") {
+    const sources = typeof flags.sources === "string" ? flags.sources.split(",").map((id) => id.trim()).filter(Boolean) : [];
+    const result = runPropose({
+      repoRoot: REPO_ROOT,
+      summary: typeof flags.summary === "string" ? flags.summary : positionals.join(" "),
+      risk: typeof flags.risk === "string" ? flags.risk : undefined,
+      sourceIds: sources,
+      diffSummary: typeof flags.diff === "string" ? flags.diff : undefined,
+      reason: typeof flags.reason === "string" ? flags.reason : undefined,
+      actor: typeof flags.actor === "string" ? flags.actor : undefined,
+    });
+    console.log(`Queued pending review ${result.reviewId} in reviews/queue.json (${result.item.risk} risk).`);
+    console.log("It now appears in-app with a pending-approval halo. Approve with:");
+    console.log(`  atlas approve ${result.reviewId} --actor "<you>" --reason "<why>"`);
+    return;
+  }
+
+  if (command === "approve") {
+    const reviewId = positionals[0];
+    if (!reviewId) {
+      console.error("approve requires a review id, e.g. atlas approve REV-... --actor you");
+      process.exit(1);
+    }
+    const result = await runResolve({
+      repoRoot: REPO_ROOT,
+      reviewId,
+      decision: typeof flags.decision === "string" ? flags.decision : undefined,
+      actor: typeof flags.actor === "string" ? flags.actor : undefined,
+      reason: typeof flags.reason === "string" ? flags.reason : undefined,
+      rebuildOnApprove: !flags["no-rebuild"],
+    });
+    console.log(`Review ${result.reviewId} → ${result.decision}. reviews/queue.json updated.`);
+    if (result.decision === "approve") {
+      console.log(result.rebuilt ? "Graph rebuilt." : `Graph rebuild skipped or failed${result.rebuildError ? `: ${result.rebuildError}` : ""}.`);
+    }
     return;
   }
 

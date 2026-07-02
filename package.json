@@ -19,9 +19,10 @@
     "test:product-world": "node scripts/verify-product-world-model.mjs",
     "test:context-bundle": "node scripts/verify-context-bundle.mjs",
     "test:operator": "node scripts/verify-operator-ask.mjs",
+    "test:operator-propose": "node scripts/verify-operator-propose.mjs",
     "operator": "node packages/operator/cli.js",
     "leak:scan": "node scripts/leak-scan.mjs",
-    "verify:local": "npm run graph:build && npm run test:python && npm run test:product-world && npm run test:graph && npm run test:context-bundle && npm run test:operator && npm run leak:scan && npm run app:build"
+    "verify:local": "npm run graph:build && npm run test:python && npm run test:product-world && npm run test:graph && npm run test:context-bundle && npm run test:operator && npm run test:operator-propose && npm run leak:scan && npm run app:build"
   },
   "dependencies": {
     "three": "^0.184.0"

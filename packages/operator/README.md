@@ -27,3 +27,22 @@ cite only sources registered in `sources/catalog.json`.
 
 Configure with `.env` (see `.env.example`). Offline demo: keep
 `ATLAS_PROVIDER=mock`, or run a local model with `ATLAS_PROVIDER=ollama`.
+
+## `propose` / `approve` (#19)
+
+The agent passes the same gate as everyone.
+
+```
+atlas propose --summary "<change>" --sources SRC-a,SRC-b [--risk low|medium|high] [--diff "<summary>"]
+atlas approve <REV-id> [--decision approve|revise|reject] [--actor <name>] [--reason <text>] [--no-rebuild]
+```
+
+`propose` drafts a review packet, validates it through the **existing**
+`scripts/lib/review-packet.mjs` (target must be `reviews/queue.json`, sources
+must be registered, side-effect fields forbidden), and appends it as a
+**pending** item — so it renders in-app with the pending-approval halo (#15).
+`approve` resolves it through `applyReviewResolution`, writes the queue, and
+rebuilds the relationship graph so the decision shows on the map.
+
+Both fail closed: a malformed packet (unknown source, wrong target, bad risk,
+unknown review id) is rejected with a clear error and writes nothing.
