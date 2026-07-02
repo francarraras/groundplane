@@ -1205,6 +1205,32 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIsNone(re.search(r"(?:localStorage|sessionStorage)\s*\.\s*setItem", app_sources))
         self.assertIsNone(re.search(r"\b(?:writeFile|appendFile)\s*\(", app_sources))
 
+    def test_context_bundle_export_is_read_only(self):
+        # Issue #16: region/cluster select -> downloadable bounded JSON bundle.
+        module = (APP / "src" / "contextBundle.js").read_text()
+        self.assertIn("export function buildContextBundle", module)
+        self.assertIn("export function serializeContextBundle", module)
+        self.assertIn("context-bundle.v1", module)
+        # Default cap is <100 KB and enforced.
+        self.assertIn("DEFAULT_BUNDLE_MAX_BYTES = 100000", module)
+        self.assertIn("maxBytes", module)
+        # Cites only registered sources: unregistered ids are warned + omitted.
+        self.assertIn("not registered in sources/catalog.json", module)
+        # Pure serializer: no durable-write or storage APIs.
+        for forbidden in ["localStorage", "sessionStorage", "indexedDB", "writeFile", "sendBeacon", "fetch("]:
+            self.assertNotIn(forbidden, module)
+
+        html = (APP / "index.html").read_text()
+        self.assertIn('id="export-context"', html)
+
+        main_js = (APP / "src" / "main.js").read_text()
+        self.assertIn("buildContextBundle", main_js)
+        self.assertIn("serializeContextBundle", main_js)
+        # Download-only export path: a Blob object URL, never a durable write.
+        self.assertIn("URL.createObjectURL", main_js)
+        self.assertIn("URL.revokeObjectURL", main_js)
+        self.assertIn('elements.exportContext?.addEventListener("click", exportContextBundle)', main_js)
+
 
 if __name__ == "__main__":
     unittest.main()

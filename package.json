@@ -14,8 +14,9 @@
     "test:python": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests",
     "test:graph": "node scripts/verify-relationship-graph.mjs",
     "test:product-world": "node scripts/verify-product-world-model.mjs",
+    "test:context-bundle": "node scripts/verify-context-bundle.mjs",
     "leak:scan": "node scripts/leak-scan.mjs",
-    "verify:local": "npm run graph:build && npm run test:python && npm run test:product-world && npm run test:graph && npm run leak:scan && npm run app:build"
+    "verify:local": "npm run graph:build && npm run test:python && npm run test:product-world && npm run test:graph && npm run test:context-bundle && npm run leak:scan && npm run app:build"
   },
   "dependencies": {
     "three": "^0.184.0"

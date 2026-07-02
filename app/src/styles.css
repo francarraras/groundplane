@@ -368,13 +368,17 @@ button {
 }
 
 .top-command:hover .deck-toggle-button,
-.top-command:focus-within .deck-toggle-button {
+.top-command:focus-within .deck-toggle-button,
+.top-command:hover .export-context-button,
+.top-command:focus-within .export-context-button {
   min-width: 70px;
   padding: 0 11px;
 }
 
 .top-command:hover .deck-toggle-label,
-.top-command:focus-within .deck-toggle-label {
+.top-command:focus-within .deck-toggle-label,
+.top-command:hover .export-context-label,
+.top-command:focus-within .export-context-label {
   display: inline;
 }
 
@@ -1006,7 +1010,8 @@ button {
   white-space: nowrap;
 }
 
-.deck-toggle-button {
+.deck-toggle-button,
+.export-context-button {
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   gap: 7px;
@@ -1014,6 +1019,7 @@ button {
   padding: 0;
 }
 
+.export-context-label,
 .deck-toggle-label {
   display: none;
   min-width: 0;
@@ -5659,12 +5665,14 @@ button {
     font-size: 0.78rem;
   }
 
-  .deck-toggle-button {
+  .deck-toggle-button,
+  .export-context-button {
     min-width: 34px;
     padding: 0;
   }
 
-  .deck-toggle-label {
+  .deck-toggle-label,
+  .export-context-label {
     display: none;
   }
 

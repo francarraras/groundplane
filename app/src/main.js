@@ -4,6 +4,7 @@ import { buildWorldNodes, createWorldScene } from "./world.js";
 import { createCommandPalette } from "./commands.js";
 import { buildReviewDraftPreview } from "./reviewDraft.js";
 import { renderDistrictBreadcrumb, renderInstruments, renderInspector, renderWorldLabels } from "./instruments.js";
+import { buildContextBundle, serializeContextBundle } from "./contextBundle.js";
 
 const elements = {
   app: document.querySelector("#product-app"),
@@ -26,6 +27,7 @@ const elements = {
   paletteResults: document.querySelector("#palette-results"),
   atlasHome: document.querySelector("#atlas-home"),
   inspectorToggle: document.querySelector("#toggle-inspector"),
+  exportContext: document.querySelector("#export-context"),
   home: document.querySelector("#home-world"),
   zoomIn: document.querySelector("#zoom-in-world"),
   zoomOut: document.querySelector("#zoom-out-world"),
@@ -46,6 +48,7 @@ let latestWorldLabels = [];
 let activeReviewDraftPreview = null;
 let activeProofLauncherId = null;
 let inspectorCollapsed = true;
+let sourceCatalog = [];
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
@@ -573,6 +576,38 @@ function goAtlasHome() {
   selectRegion(model?.currentFocus?.id || selectedId, { focus: false, allowDistrictEnter: false });
 }
 
+// Read-only export (#16): serialize the current selection into a bounded JSON
+// context bundle and hand it to the user as a download. No storage, no network,
+// no durable write — the browser-writes-nothing invariant holds.
+function exportContextBundle() {
+  if (!baseModel) return false;
+
+  const bundle = buildContextBundle({
+    baseModel,
+    model,
+    selectedId,
+    activeDistrictId,
+    sources: sourceCatalog,
+  });
+  const { json } = serializeContextBundle(bundle);
+
+  const scopeSlug = String(bundle.scope.id || bundle.scope.kind || "atlas")
+    .replace(/[^a-z0-9-]+/gi, "-")
+    .replace(/^-+|-+$/g, "")
+    .toLowerCase();
+  const blob = new Blob([json], { type: "application/json" });
+  const objectUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = objectUrl;
+  anchor.download = `groundplane-context-${scopeSlug || "atlas"}.json`;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(objectUrl);
+  return true;
+}
+
+elements.exportContext?.addEventListener("click", exportContextBundle);
 elements.atlasHome?.addEventListener("click", goAtlasHome);
 elements.home?.addEventListener("click", goAtlasHome);
 elements.runCurrentBlock?.addEventListener("click", startCurrentStep);
@@ -639,6 +674,7 @@ async function boot() {
   }
 
   const state = await loadProductState();
+  sourceCatalog = asArray(state?.sources?.sources);
   baseModel = buildSurfaceModel(state);
   activeDistrictId = null;
   model = buildDistrictWorldModel(baseModel, activeDistrictId);
