@@ -23,6 +23,21 @@ def _instruments_source():
     return "\n".join(parts)
 
 
+def _view_model_source():
+    """Concatenate the viewModel barrel and its per-concern modules.
+
+    viewModel.js was split into app/src/viewModel/*.js (issue #10 follow-up).
+    The contract assertions check for literal source substrings that now live
+    in those modules, so they are read together as one logical source.
+    """
+    view_model_dir = APP / "src" / "viewModel"
+    parts = [(APP / "src" / "viewModel.js").read_text()]
+    if view_model_dir.is_dir():
+        for module in sorted(view_model_dir.glob("*.js")):
+            parts.append(module.read_text())
+    return "\n".join(parts)
+
+
 class ProductAppContractTest(unittest.TestCase):
     def test_product_app_files_exist(self):
         for relative_path in [
@@ -312,7 +327,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIn("Your move", instruments)
         self.assertIn("data-assistant-route", instruments)
 
-        view_model = (APP / "src" / "viewModel.js").read_text()
+        view_model = _view_model_source()
         self.assertIn("assistantBrief", view_model)
         self.assertIn("brainAssistantBehavior", view_model)
         self.assertIn("buildRoadmapCandidates", view_model)
@@ -343,7 +358,7 @@ class ProductAppContractTest(unittest.TestCase):
 
     def test_system_home_cockpit_is_first_class_read_only_surface(self):
         instruments = _instruments_source()
-        view_model = (APP / "src" / "viewModel.js").read_text()
+        view_model = _view_model_source()
         css = (APP / "src" / "styles.css").read_text()
 
         self.assertIn("systemHomeCockpit", view_model)
@@ -371,7 +386,7 @@ class ProductAppContractTest(unittest.TestCase):
 
     def test_today_command_surface_is_first_class_read_only_surface(self):
         instruments = _instruments_source()
-        view_model = (APP / "src" / "viewModel.js").read_text()
+        view_model = _view_model_source()
         css = (APP / "src" / "styles.css").read_text()
 
         self.assertIn("todayCommandSurface", view_model)
@@ -397,7 +412,7 @@ class ProductAppContractTest(unittest.TestCase):
         html = (APP / "index.html").read_text()
         main = (APP / "src" / "main.js").read_text()
         instruments = _instruments_source()
-        view_model = (APP / "src" / "viewModel.js").read_text()
+        view_model = _view_model_source()
         css = (APP / "src" / "styles.css").read_text()
 
         self.assertIn('id="spatial-command-overlay"', html)
@@ -521,7 +536,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.command-deck:has\(\.command-deck-drawer\[open\]\) \.area-brief\s*\{[\s\S]*display:\s*none")
 
     def test_project_workspace_has_first_real_project_surface(self):
-        view_model = (APP / "src" / "viewModel.js").read_text()
+        view_model = _view_model_source()
         self.assertIn("function buildProjectWorkspaces", view_model)
         self.assertIn("workspace:PROJ-001", view_model)
         self.assertIn("projectWorkspace", view_model)
@@ -850,7 +865,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertRegex(css, r"\.proof-detail-drawer:not\(\[open\]\) \.proof-detail-body\s*\{[\s\S]*display:\s*none")
 
     def test_proof_launcher_is_read_only_and_actionable(self):
-        view_model = (APP / "src" / "viewModel.js").read_text()
+        view_model = _view_model_source()
         instruments = _instruments_source()
         main = (APP / "src" / "main.js").read_text()
         css = (APP / "src" / "styles.css").read_text()
