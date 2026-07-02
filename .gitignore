@@ -1,0 +1,15 @@
+node_modules/
+dist/
+__pycache__/
+*.py[cod]
+.DS_Store
+.superpowers/
+.env
+.env.*
+!.env.example
+*.local
+*.secret
+secrets/
+private/
+.worktrees/
+worktrees/

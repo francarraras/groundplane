@@ -1,0 +1,27 @@
+{
+  "name": "groundplane",
+  "version": "0.1.0",
+  "description": "Local-first cockpit for agent-operated work: plain JSON files compiled into an explorable spatial map with evidence trails, permission modes, and an approval queue. Read-only by design.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "app:dev": "vite --host 127.0.0.1",
+    "app:local": "vite --host 127.0.0.1 --port 5175 --strictPort",
+    "app:local:check": "node scripts/check-product-app.mjs",
+    "app:build": "vite build",
+    "app:preview": "vite preview --host 127.0.0.1",
+    "graph:build": "node scripts/build-relationship-graph.mjs",
+    "test:python": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests",
+    "test:graph": "node scripts/verify-relationship-graph.mjs",
+    "test:product-world": "node scripts/verify-product-world-model.mjs",
+    "leak:scan": "node scripts/leak-scan.mjs",
+    "verify:local": "npm run graph:build && npm run test:python && npm run test:product-world && npm run test:graph && npm run leak:scan && npm run app:build"
+  },
+  "dependencies": {
+    "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "vite": "^8.0.16"
+  }
+}
