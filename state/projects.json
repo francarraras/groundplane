@@ -1,0 +1,100 @@
+{
+  "schema_version": "projects.v1",
+  "updated_at": "2026-06-30",
+  "projects": [
+    {
+      "id": "PROJ-001",
+      "title": "Skylark 1.0 Launch",
+      "domain": "product-launch",
+      "status": "active",
+      "health": "yellow",
+      "outcome": "Skylark, the weather-journal app, live in the store as a one-time purchase with a calm launch week and no surprise regressions.",
+      "next_action": "Finish the TASK-044 submission dry run, then submit Skylark 1.0 (TASK-050) before the 2026-06-24 store cutoff.",
+      "owner": "Mara Voss",
+      "target_date": "2026-06-26",
+      "last_reviewed": "2026-06-30",
+      "source_ids": ["SRC-2026-06-13-001", "SRC-2026-06-13-002", "SRC-2026-06-18-001", "SRC-2026-06-30-001"],
+      "approval_mode": "draft-for-approval",
+      "project_context": {
+        "source_id": "SRC-2026-06-13-001",
+        "purpose": "Ship Skylark 1.0 with visible, sourced proof at every gate: playtest fixes folded in, pricing locked, store submission clean.",
+        "strategy_path": "sources/raw/2026-06-13-studio-operating-notes.md",
+        "proof_loop": [
+          "Build the smallest demo slice",
+          "Run the smoke check",
+          "Record verification in the proof package",
+          "Queue a review packet before anything durable moves"
+        ],
+        "usage_paths": [
+          "cd proof/skylark-launch-demo && python3 server.py",
+          "open http://127.0.0.1:8000 for the local demo walkthrough"
+        ],
+        "repo_map": [
+          "state/ holds current operating state",
+          "sources/ holds raw truth and the catalog",
+          "reviews/ holds the approval queue",
+          "wiki/ holds compiled memory claims"
+        ],
+        "privacy_boundary": "Beta tester feedback stays local to the studio; only aggregated survey stats leave the machine.",
+        "operating_guide": {
+          "source_id": "SRC-2026-06-13-002",
+          "daily_loop": [
+            "Open Today and check the current gate",
+            "Triage new beta feedback",
+            "Advance the gate task in one reviewable slice",
+            "Queue a review packet for anything durable"
+          ],
+          "tabs": [
+            "Today = current gate and one recommended move",
+            "Projects = launch state for Skylark, website, community",
+            "Reviews = approval queue; nothing durable skips it"
+          ],
+          "proof_rules": [
+            "Judge launch readiness only on repo-backed visible proof",
+            "Every claim needs a source id from the catalog",
+            "Run the smoke check before showing the demo"
+          ],
+          "operator_prompts": [
+            "Propose the smallest next launch slice for the current gate",
+            "Draft a review packet for the pricing confirmation before TASK-058 promotion"
+          ],
+          "v2_limits": [
+            "No live store API connection; submission is manual",
+            "Demo weather fixtures are synthetic and deterministic",
+            "No auto-publishing of public copy",
+            "No memory writes without an approved review packet"
+          ],
+          "likely_next_upgrade": "Wire the beta survey digest into the weekly ship review routine after launch."
+        }
+      }
+    },
+    {
+      "id": "PROJ-002",
+      "title": "Ridgeline Website & Docs",
+      "domain": "web-presence",
+      "status": "active",
+      "health": "green",
+      "outcome": "ridgeline.example tells the local-first story, the docs cover the 1.0 flow, and the changelog updates itself from release notes.",
+      "next_action": "Rewrite the Skylark quickstart guide for the 1.0 flow with fresh screenshots (TASK-061).",
+      "owner": "Theo Anand",
+      "target_date": "2026-06-25",
+      "last_reviewed": "2026-06-29",
+      "source_ids": ["SRC-2026-06-22-001", "SRC-2026-06-13-001"],
+      "approval_mode": "draft-for-approval"
+    },
+    {
+      "id": "PROJ-003",
+      "title": "Beta Community & Support",
+      "domain": "community-support",
+      "status": "active",
+      "health": "green",
+      "outcome": "Beta testers feel heard through launch week: tickets answered inside 24 hours, themes digested weekly, survey loop feeding v1.1 scope.",
+      "next_action": "Finish the weekly support digest automation (TASK-073) before launch-week volume arrives.",
+      "owner": "Theo Anand",
+      "target_date": "2026-07-01",
+      "last_reviewed": "2026-06-28",
+      "source_ids": ["SRC-2026-06-20-001", "SRC-2026-06-24-001"],
+      "approval_mode": "draft-for-approval"
+    }
+  ]
+}

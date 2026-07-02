@@ -1,0 +1,304 @@
+{
+  "schema_version": "board.v1",
+  "project": {
+    "name": "Groundplane",
+    "current_phase": "launch-week-operations",
+    "north_star": "Every Ridgeline Studio decision visible, sourced, and reversible from one local cockpit.",
+    "updated_at": "2026-07-01"
+  },
+  "decisions": [
+    {
+      "id": "BD-001",
+      "decision": "Groundplane stays a local browser app reading local JSON state; no cloud backend, accounts, or telemetry in V0.",
+      "status": "locked",
+      "decided_at": "2026-06-13",
+      "reason": "A two-person studio needs a cockpit it can trust offline during launch week; local files are the whole truth."
+    },
+    {
+      "id": "BD-002",
+      "decision": "A single operator agent runs the build thread; the studio approves every durable write through the review queue.",
+      "status": "locked",
+      "decided_at": "2026-06-13",
+      "reason": "One thread, one gate, one approval path keeps the operation auditable while both partners focus on Skylark."
+    },
+    {
+      "id": "BD-003",
+      "decision": "The relationship graph compiles only from source-cited records; fallback source ids stay disabled.",
+      "status": "locked",
+      "decided_at": "2026-06-14",
+      "reason": "If a record cannot cite a catalog source, it does not belong on the map."
+    },
+    {
+      "id": "BD-004",
+      "decision": "Daily Operations automation stays parked until the studio explicitly restarts it after the launch retro.",
+      "status": "locked",
+      "decided_at": "2026-06-20",
+      "reason": "Launch week is not the time to hand cadence to automation; TASK-056 holds the restart decision."
+    }
+  ],
+  "workstreams": [
+    {
+      "id": "ws-launch",
+      "name": "Launch Ops",
+      "status": "active",
+      "focus": "Get Skylark 1.0 submitted, launched, and retrospected without dropping a gate."
+    },
+    {
+      "id": "ws-qa",
+      "name": "Product QA",
+      "status": "active",
+      "focus": "Crash-free sessions, playtest fixes, and the telemetry review plan."
+    },
+    {
+      "id": "ws-store",
+      "name": "Store & Pricing",
+      "status": "active",
+      "focus": "Listing, pricing per DEC-001, dry run, and the submission itself."
+    },
+    {
+      "id": "ws-web",
+      "name": "Website & Docs",
+      "status": "active",
+      "focus": "Quickstart rewrite, pricing copy, changelog automation on ridgeline.example."
+    },
+    {
+      "id": "ws-community",
+      "name": "Community & Support",
+      "status": "active",
+      "focus": "Forum, survey loop, macros, and the launch-week support plan."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "TASK-044",
+      "title": "Run the store submission dry run",
+      "status": "active",
+      "priority": "high",
+      "workstream": "Store & Pricing",
+      "owner": "Mara Voss",
+      "next_action": "Walk the full submission on a clean device profile and record the sign-off."
+    },
+    {
+      "id": "TASK-050",
+      "title": "Submit Skylark 1.0 to the app store",
+      "status": "active",
+      "priority": "high",
+      "workstream": "Store & Pricing",
+      "owner": "Mara Voss",
+      "next_action": "Submit with the expedite note once the dry-run sign-off is recorded."
+    },
+    {
+      "id": "TASK-054",
+      "title": "Launch-day comms checklist",
+      "status": "planned",
+      "priority": "medium",
+      "workstream": "Launch Ops",
+      "owner": "Theo Anand",
+      "next_action": "List every launch-day message with owner and timing."
+    },
+    {
+      "id": "TASK-056",
+      "title": "Daily Operations restart decision",
+      "status": "parked",
+      "priority": "low",
+      "workstream": "Launch Ops",
+      "owner": "Mara Voss",
+      "next_action": "Hold parked until the launch retro; restarting is an explicit user decision."
+    },
+    {
+      "id": "TASK-058",
+      "title": "Launch pricing approval packet",
+      "status": "needs-decision",
+      "priority": "high",
+      "workstream": "Store & Pricing",
+      "owner": "Mara Voss",
+      "next_action": "Approve, revise, or reject the pending pricing packet in the review queue."
+    },
+    {
+      "id": "TASK-068",
+      "title": "Skylark context usage loop",
+      "status": "active",
+      "priority": "medium",
+      "workstream": "Launch Ops",
+      "owner": "Mara Voss",
+      "next_action": "Run the imported user-guide loop daily without any browser writes."
+    },
+    {
+      "id": "TASK-080",
+      "title": "Launch retro and v1.1 scope draft",
+      "status": "planned",
+      "priority": "medium",
+      "workstream": "Launch Ops",
+      "owner": "Mara Voss",
+      "next_action": "Schedule the retro for after launch week and seed it with survey requests."
+    }
+  ],
+  "threads": [
+    {
+      "name": "Command Center",
+      "status": "active",
+      "purpose": "Turn messy studio intake into reviewable proposals and keep operating state compiled.",
+      "owns": [
+        "state/*.json compilation",
+        "reviews/queue.json proposals",
+        "sources/catalog.json"
+      ],
+      "prompt_file": "docs/intake/operating-context-intake.md"
+    },
+    {
+      "name": "Cockpit Surface",
+      "status": "active",
+      "purpose": "Keep the read-only map and Today surface honest against local state.",
+      "owns": [
+        "indexes/relationship-graph.json via the build script",
+        "read-only app views"
+      ],
+      "prompt_file": "docs/today-cockpit-contract.md"
+    },
+    {
+      "name": "Memory Steward",
+      "status": "active",
+      "purpose": "Lint memory claims and promote them only through approved review packets.",
+      "owns": [
+        "wiki/memory-claims.json",
+        "logs/memory-events.jsonl"
+      ],
+      "prompt_file": "skills/memory-lint/SKILL.md"
+    }
+  ],
+  "risks": [
+    {
+      "id": "RISK-001",
+      "risk": "Store review takes longer than the 2026-06-26 launch window.",
+      "severity": "medium",
+      "mitigation": "Submit by the 2026-06-24 cutoff with the expedite note prepared.",
+      "status": "open"
+    },
+    {
+      "id": "RISK-002",
+      "risk": "Launch-week support volume swamps a two-person studio.",
+      "severity": "medium",
+      "mitigation": "Reply macros, office hours, and the digest automation staged before 2026-06-26.",
+      "status": "mitigating"
+    },
+    {
+      "id": "RISK-003",
+      "risk": "Single weather provider outage during launch week.",
+      "severity": "low",
+      "mitigation": "Cached fallback (TASK-022) covered every beta outage; second provider deferred by DEC-006.",
+      "status": "accepted"
+    }
+  ],
+  "metrics": {
+    "beta_testers": 25,
+    "survey_responses": 21,
+    "crash_free_sessions_pct": 99.4,
+    "nps_style_score": 41,
+    "pending_reviews": 1,
+    "graph_warnings": 0,
+    "proof_packages_ready": 2
+  },
+  "roadmap": [
+    {
+      "id": "PH-1",
+      "title": "Private beta",
+      "status": "done",
+      "outcome": "25 playtesters journaling weekly; round-one fixes shipped in beta 4.",
+      "next_steps": [
+        "Keep the playtest synthesis (SRC-2026-06-14-002) as the evidence base for onboarding claims"
+      ]
+    },
+    {
+      "id": "PH-2",
+      "title": "Launch window",
+      "status": "active",
+      "outcome": "Skylark 1.0 live in the store as a one-time purchase.",
+      "next_steps": [
+        "Finish the TASK-044 dry run",
+        "Submit TASK-050 before the 2026-06-24 cutoff",
+        "Resolve the TASK-058 pricing packet",
+        "Stage the TASK-054 comms checklist"
+      ]
+    },
+    {
+      "id": "PH-3",
+      "title": "Post-launch care",
+      "status": "planned",
+      "outcome": "Stable support loop, verified memory claims, and a sourced v1.1 scope.",
+      "next_steps": [
+        "Run the TASK-080 retro",
+        "Decide the Daily Operations restart (TASK-056)",
+        "Send survey round two (TASK-077) once tooling is fixed"
+      ]
+    }
+  ],
+  "operating_protocol": {
+    "role": "Groundplane acts as Ridgeline Studio's chief-of-staff cockpit: it keeps one recommended move visible, cites sources for everything, and never writes without review.",
+    "command_rules": [
+      "One gate at a time; finish it or explicitly park it.",
+      "Every durable change moves through reviews/queue.json as a packet with sources and an undo path.",
+      "The browser surface is read-only; writes happen operator-side after approval.",
+      "Every record cites source ids from sources/catalog.json."
+    ],
+    "when_operator_decides": [
+      "Ordering of build slices inside an already-approved gate.",
+      "Refactors and fixes that keep the test suite green.",
+      "Draft copy explicitly marked as a proposal."
+    ],
+    "when_user_input_is_required": [
+      "Approving, revising, or rejecting any review packet.",
+      "Anything that changes price, launch date, or public copy.",
+      "Restarting Daily Operations (TASK-056).",
+      "Importing any new source into the catalog."
+    ],
+    "input_request_format": "One question per packet: a one-line context, the exact ask, options with a recommended default, and the undo path.",
+    "next_command": "Current product gate: TASK-050 final store submission. Next recommended product move: complete the TASK-044 dry-run sign-off, then submit Skylark 1.0 before the 2026-06-24 store cutoff. Keep the TASK-058 pricing packet visible in Reviews until it is explicitly resolved.",
+    "roadmap_candidates": [
+      {
+        "id": "TASK-050",
+        "title": "Submit Skylark 1.0 to the app store",
+        "status": "active",
+        "recommended": true,
+        "risk": "medium",
+        "next_action": "Complete the TASK-044 dry-run sign-off, then submit with the expedite note before 2026-06-24.",
+        "reason": "The submission is the launch-critical path; everything else this week serves it.",
+        "approval_boundary": "Submission copy is frozen; any change to listing text or price is a separate review packet.",
+        "source_ids": ["SRC-2026-06-18-001", "SRC-2026-06-30-001"]
+      },
+      {
+        "id": "TASK-058",
+        "title": "Launch pricing approval packet",
+        "status": "needs-decision",
+        "recommended": false,
+        "requires_user_input": true,
+        "risk": "medium",
+        "next_action": "Approve, revise, or reject the pending packet confirming 6 USD one-time against the store listing copy.",
+        "reason": "DEC-001 is locked, but the packet keeps the confirmation auditable before submission.",
+        "approval_boundary": "Preview only until resolved; no price or listing edits from the cockpit.",
+        "source_ids": ["SRC-2026-06-16-001", "SRC-2026-06-13-001"]
+      },
+      {
+        "id": "TASK-054",
+        "title": "Launch-day comms checklist",
+        "status": "planned",
+        "recommended": false,
+        "risk": "low",
+        "next_action": "Draft the checklist of launch-day messages with owner and timing for 2026-06-26.",
+        "reason": "Comms staged early keeps launch day boring, which is the goal.",
+        "approval_boundary": "Drafts only; sending anything public is an external_write packet.",
+        "source_ids": ["SRC-2026-06-13-001", "SRC-2026-06-22-001"]
+      },
+      {
+        "id": "TASK-068",
+        "title": "Skylark context usage loop",
+        "status": "active",
+        "recommended": false,
+        "risk": "low",
+        "next_action": "Keep running the imported user-guide loop daily; no additional source reads needed.",
+        "reason": "The loop keeps the cockpit's recommendations grounded in the imported guide instead of memory.",
+        "approval_boundary": "Read-only loop; no browser writes and no new imports without approval.",
+        "source_ids": ["SRC-2026-06-13-002"]
+      }
+    ]
+  }
+}

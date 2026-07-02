@@ -1,0 +1,92 @@
+{
+  "schema_version": "decisions.v1",
+  "updated_at": "2026-06-30",
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "decision": "Skylark 1.0 ships as a one-time purchase at 6 USD; no subscription and no freemium tier at launch.",
+      "status": "locked",
+      "options": [
+        "One-time purchase at 6 USD",
+        "Subscription at 1.50 USD per month",
+        "Freemium with a tip jar"
+      ],
+      "recommendation": "One-time purchase at 6 USD",
+      "reason": "16 of 21 survey respondents preferred paying once, the median acceptable price was 5-7 USD, and one SKU keeps launch support simple.",
+      "decided_at": "2026-06-16",
+      "review_date": "2026-07-01",
+      "source_ids": ["SRC-2026-06-16-001", "SRC-2026-06-20-001"]
+    },
+    {
+      "id": "DEC-002",
+      "decision": "Skylark 1.0 launches on 2026-06-26, with store submission by the 2026-06-24 cutoff.",
+      "status": "locked",
+      "options": [
+        "Launch 2026-06-26 inside the current store window",
+        "Slip one week to 2026-07-03 for extra polish"
+      ],
+      "recommendation": "Launch 2026-06-26",
+      "reason": "Round-one playtest found no launch blockers and the readiness review confirmed the proof package; slipping only stretches the crunch.",
+      "decided_at": "2026-06-18",
+      "review_date": "2026-06-30",
+      "source_ids": ["SRC-2026-06-14-002", "SRC-2026-06-18-001", "SRC-2026-06-30-001"]
+    },
+    {
+      "id": "DEC-003",
+      "decision": "The beta community runs on a self-hosted forum instead of a hosted chat service.",
+      "status": "locked",
+      "options": [
+        "Self-hosted forum the studio controls",
+        "Hosted chat service with invite links"
+      ],
+      "recommendation": "Self-hosted forum",
+      "reason": "Matches the local-first story, keeps tester feedback under studio control, and threads digest better into weekly support themes.",
+      "decided_at": "2026-06-08",
+      "review_date": "2026-07-01",
+      "source_ids": ["SRC-2026-06-13-001", "SRC-2026-06-24-001"]
+    },
+    {
+      "id": "DEC-004",
+      "decision": "ridgeline.example stays a static site generated from the docs repo; no CMS before v1.1.",
+      "status": "locked",
+      "options": [
+        "Static site from the docs repo",
+        "Hosted CMS with an editor UI"
+      ],
+      "recommendation": "Static site from the docs repo",
+      "reason": "Two people cannot babysit a CMS during launch week; static output keeps the changelog automation path (TASK-062) simple.",
+      "decided_at": "2026-06-11",
+      "review_date": "2026-07-01",
+      "source_ids": ["SRC-2026-06-22-001", "SRC-2026-06-13-001"]
+    },
+    {
+      "id": "DEC-005",
+      "decision": "Support SLA for launch week: first reply within 24 hours on every ticket.",
+      "status": "open",
+      "options": [
+        "24-hour first reply during launch week",
+        "48-hour first reply",
+        "Best effort with office hours only"
+      ],
+      "recommendation": "24-hour first reply during launch week",
+      "reason": "Week-26 volume was handled inside 24 hours with two people; macros and office hours should absorb the launch spike, but the commitment is not locked yet.",
+      "decided_at": "2026-06-24",
+      "review_date": "2026-07-01",
+      "source_ids": ["SRC-2026-06-24-001"]
+    },
+    {
+      "id": "DEC-006",
+      "decision": "Keep the current licensed weather provider as primary with the cached fallback; defer any second provider to v1.1.",
+      "status": "locked",
+      "options": [
+        "Single provider with cached fallback",
+        "Add a second provider before launch"
+      ],
+      "recommendation": "Single provider with cached fallback",
+      "reason": "The fallback cache (TASK-022) covered every outage in beta; integrating a second provider now adds risk during the freeze.",
+      "decided_at": "2026-06-15",
+      "review_date": "2026-07-01",
+      "source_ids": ["SRC-2026-06-13-002", "SRC-2026-06-30-001"]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "run_id": "RUN-2026-07-01-EXEC-001",
+  "workflow": "daily-execution-runner",
+  "linked_plan_run_id": "RUN-2026-07-01-PLAN-001",
+  "status": "awaiting-user-start",
+  "permission_mode": "suggest-only",
+  "created_at": "2026-07-01",
+  "source_ids": ["SRC-2026-06-13-003"],
+  "current_block": {
+    "index": 0,
+    "label": "Morning standup and gate check",
+    "when": "08:30",
+    "duration": "15m",
+    "action": "Read the current gate (TASK-050), name blockers in one sentence each, and pick today's single decision.",
+    "status": "ready"
+  },
+  "block_queue": [
+    {
+      "label": "Morning standup and gate check",
+      "when": "08:30",
+      "duration": "15m",
+      "action": "Read the current gate (TASK-050), name blockers in one sentence each, and pick today's single decision.",
+      "status": "ready"
+    },
+    {
+      "label": "Submission dry run",
+      "when": "09:00",
+      "duration": "90m",
+      "action": "Walk the full TASK-044 store submission on a clean device profile and record the sign-off in the checklist.",
+      "status": "queued"
+    },
+    {
+      "label": "Beta feedback triage",
+      "when": "11:00",
+      "duration": "30m",
+      "action": "Label new tickets and playtest notes; escalate anything crash-related to the QA rotation.",
+      "status": "queued"
+    },
+    {
+      "label": "Quickstart rewrite slice",
+      "when": "13:00",
+      "duration": "60m",
+      "action": "Advance TASK-061 with fresh 1.0 screenshots and matching first-run copy.",
+      "status": "queued"
+    },
+    {
+      "label": "Review queue pass",
+      "when": "16:30",
+      "duration": "20m",
+      "action": "Resolve or explicitly defer the TASK-058 pricing packet; nothing stays silently pending.",
+      "status": "queued"
+    }
+  ],
+  "user_signal": {
+    "exact_ask": "Start block 1: Morning standup and gate check? Reply 'Start block 1' to begin, or name a different block to reorder.",
+    "options": ["Start block 1", "Reorder blocks", "Park today's plan"]
+  },
+  "completion_signal": {
+    "exact_ask": "When a block is done, reply 'Done block N' with one line on what actually happened; the runner never marks blocks done on its own.",
+    "writes": "none"
+  },
+  "blocked_by": []
+}

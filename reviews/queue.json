@@ -1,0 +1,153 @@
+{
+  "reviews": [
+    {
+      "id": "REV-2026-06-17-001",
+      "type": "routine-intake",
+      "status": "approved",
+      "risk": "medium",
+      "proposed_by": "Command Center",
+      "action_type": "project_state_update",
+      "target_file": "state/routines.json",
+      "summary": "Promote the launch-week routines from the 2026-06-13 intake capture",
+      "source_ids": [
+        "SRC-2026-06-13-003",
+        "SRC-2026-06-13-001"
+      ],
+      "source_refs": [
+        {
+          "source_id": "SRC-2026-06-13-003",
+          "path": "sources/raw/2026-06-13-routine-intake.md",
+          "marker_range": "full-document"
+        }
+      ],
+      "source_trust": "user-provided",
+      "sensitivity": "personal",
+      "requires_explicit_approval": true,
+      "diff_summary": "Convert five intake bullets into structured routines: launch standup, feedback triage, support digest, ship review, and the parked monthly books close.",
+      "approval_mode": "draft-for-approval",
+      "created_at": "2026-06-16",
+      "undo_path": "Remove the five promoted routine records from state/routines.json and re-open this packet.",
+      "resolution_status": "approved",
+      "resolution_decision": "approve",
+      "resolution_reason": "Matches the intake capture word for word; monthly books stays parked as requested.",
+      "resolution_source_ids": [
+        "SRC-2026-06-13-003",
+        "SRC-2026-06-13-001"
+      ],
+      "resolved_by": "operator",
+      "resolved_at": "2026-06-17"
+    },
+    {
+      "id": "ERF-C002",
+      "type": "external-review-finding",
+      "status": "approved",
+      "risk": "high",
+      "proposed_by": "Command Center",
+      "action_type": "memory_write",
+      "target_file": "wiki/memory-claims.json",
+      "summary": "Playtest finding C002: promote the units-toggle insight and the morning-journaling insight to memory",
+      "source_ids": [
+        "SRC-2026-06-14-002",
+        "SRC-2026-06-20-001"
+      ],
+      "source_refs": [
+        {
+          "source_id": "SRC-2026-06-14-002",
+          "path": "sources/raw/2026-06-14-playtest-feedback-synthesis.md",
+          "marker_range": "Findings/C002"
+        },
+        {
+          "source_id": "SRC-2026-06-20-001",
+          "path": "sources/raw/2026-06-20-beta-survey-results.md",
+          "marker_range": "Habit"
+        }
+      ],
+      "source_trust": "user-provided",
+      "sensitivity": "normal",
+      "requires_explicit_approval": true,
+      "diff_summary": "Add MC-001 (morning reminder default) and MC-002 (units-toggle confusion resolved by the C002 relabel) as approved memory claims with sources.",
+      "approval_mode": "draft-for-approval",
+      "created_at": "2026-06-18",
+      "undo_path": "Remove MC-001 and MC-002 from wiki/memory-claims.json and log a memory correction event.",
+      "resolution_status": "approved",
+      "resolution_decision": "approve",
+      "resolution_reason": "Both claims are directly evidenced by the playtest synthesis and the survey; confidence levels set accordingly.",
+      "resolution_source_ids": [
+        "SRC-2026-06-14-002",
+        "SRC-2026-06-20-001"
+      ],
+      "resolved_by": "operator",
+      "resolved_at": "2026-06-18"
+    },
+    {
+      "id": "REV-2026-06-21-001",
+      "type": "proof-artifact-review",
+      "status": "approved",
+      "risk": "medium",
+      "proposed_by": "Command Center",
+      "action_type": "project_state_update",
+      "target_file": "state/proof-artifacts.json",
+      "summary": "Register the Skylark launch-readiness demo package as the flagship proof artifact",
+      "source_ids": [
+        "SRC-2026-06-18-001",
+        "SRC-2026-06-13-002"
+      ],
+      "source_refs": [
+        {
+          "source_id": "SRC-2026-06-18-001",
+          "path": "sources/raw/2026-06-18-app-store-submission-checklist.md",
+          "marker_range": "Build"
+        }
+      ],
+      "source_trust": "operator-verified",
+      "sensitivity": "normal",
+      "requires_explicit_approval": true,
+      "diff_summary": "Add PROOF-FLAGSHIP-001 with its demo, smoke script, review doc, verification counts, and the read-only approval boundary.",
+      "approval_mode": "draft-for-approval",
+      "created_at": "2026-06-20",
+      "undo_path": "Remove PROOF-FLAGSHIP-001 from state/proof-artifacts.json; the package folder itself stays untouched.",
+      "resolution_status": "approved",
+      "resolution_decision": "approve",
+      "resolution_reason": "Smoke check and 42 verification checks pass; limitations are honestly recorded (synthetic fixtures, manual submission).",
+      "resolution_source_ids": [
+        "SRC-2026-06-18-001",
+        "SRC-2026-06-13-002"
+      ],
+      "resolved_by": "operator",
+      "resolved_at": "2026-06-21"
+    },
+    {
+      "id": "REV-PREVIEW-PROJECT-PROJ-001-LAUNCH-PRICING-PACKET",
+      "type": "review-packet",
+      "status": "pending",
+      "risk": "medium",
+      "proposed_by": "operator",
+      "action_type": "draft_review_item",
+      "target_file": "reviews/queue.json",
+      "summary": "Skylark 1.0 launch pricing review packet",
+      "source_ids": [
+        "SRC-2026-06-16-001",
+        "SRC-2026-06-13-001"
+      ],
+      "source_refs": [
+        {
+          "source_id": "SRC-2026-06-16-001",
+          "path": "sources/raw/2026-06-16-pricing-decision-worksheet.md"
+        },
+        {
+          "source_id": "SRC-2026-06-13-001",
+          "path": "sources/raw/2026-06-13-studio-operating-notes.md"
+        }
+      ],
+      "source_trust": "user-provided",
+      "sensitivity": "normal",
+      "requires_explicit_approval": true,
+      "diff_summary": "Confirm the locked 6 USD one-time price against the frozen store listing copy before TASK-058 promotion. No memory or state writes.",
+      "approval_mode": "draft-for-approval",
+      "created_at": "2026-06-28",
+      "browser_preview_id": "PREVIEW-project-proj-001-launch-pricing-packet",
+      "approval_reason": "Queue the launch pricing confirmation for manual review before any durable state change.",
+      "undo_path": "Remove the generated review item from reviews/queue.json before promotion."
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "intake.v1",
+  "status": "needs-input",
+  "recommended_scope": "active-projects",
+  "situation": "The launch-week state is compiled, but new studio context (post-launch commitments, v1.1 ideas, life constraints) has not been captured since 2026-06-30.",
+  "recommended_path": "Paste rough bullets into the intake scratchpad, then run the proposal command; everything lands as reviewable packets, never direct writes.",
+  "exact_ask": "Paste any new projects or commitments between the intake markers, then run the proposal command for the active-projects scope.",
+  "capture_file": "inbox/intake.md",
+  "proposal_command": "node scripts/prepare-intake-review.mjs --input inbox/intake.md --scope active-projects",
+  "review_policy": "The intake pipeline does not write state or memory. It prints a draft-for-approval packet; only an explicit operator approval promotes anything.",
+  "source_ids": ["SRC-2026-06-13-003"],
+  "options": [
+    {
+      "id": "active-projects",
+      "label": "Active Projects",
+      "why": "Projects and commitments are the backbone of the map; capturing them first makes every other surface useful.",
+      "send_format": "- project name - why it matters - status - next action - deadline - blocker",
+      "example_prompt": "- Skylark v1.1 export feature - top survey request - planned - next: scope month export - after launch retro",
+      "proposal_type": "project-intake",
+      "action_type": "project_state_update",
+      "target_file": "state/projects.json"
+    },
+    {
+      "id": "daily-routine",
+      "label": "Daily Routine",
+      "why": "The launch-week cadence is captured, but the post-launch rhythm is not; routines keep the assistant's suggestions honest.",
+      "send_format": "- routine name - cadence - steps - what usually derails it - what to enforce",
+      "example_prompt": "- Post-launch review inbox - daily - read store reviews, tag themes - derailed by feature work - enforce 20-minute cap",
+      "proposal_type": "routine-intake",
+      "action_type": "project_state_update",
+      "target_file": "state/routines.json"
+    },
+    {
+      "id": "life-areas",
+      "label": "Life Areas",
+      "why": "Life-area context is the most sensitive layer; it only enters memory through high-risk review packets.",
+      "send_format": "- area - what it is responsible for - current pain - desired standard - anything gated",
+      "example_prompt": "- Health - keep climbing twice a week through launch - currently skipped - standard: never two misses in a row",
+      "proposal_type": "life-area-intake",
+      "action_type": "memory_write",
+      "target_file": "wiki/memory-claims.json"
+    }
+  ]
+}

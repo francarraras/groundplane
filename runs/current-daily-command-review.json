@@ -1,0 +1,48 @@
+{
+  "run_id": "RUN-2026-07-01-PLAN-001",
+  "workflow": "daily-command-review",
+  "trigger": "manual",
+  "actor": "Command Center",
+  "status": "ready-for-execution",
+  "permission_mode": "suggest-only",
+  "created_at": "2026-07-01",
+  "source_ids": ["SRC-2026-06-13-003", "SRC-2026-06-30-001"],
+  "hard_recommendation": "Finish the TASK-044 submission dry run before anything else today; it is the only item blocking TASK-050.",
+  "plan_blocks": [
+    {
+      "label": "Morning standup and gate check",
+      "when": "08:30",
+      "duration": "15m",
+      "action": "Read the current gate (TASK-050), name blockers in one sentence each, and pick today's single decision."
+    },
+    {
+      "label": "Submission dry run",
+      "when": "09:00",
+      "duration": "90m",
+      "action": "Walk the full TASK-044 store submission on a clean device profile and record the sign-off in the checklist."
+    },
+    {
+      "label": "Beta feedback triage",
+      "when": "11:00",
+      "duration": "30m",
+      "action": "Label new tickets and playtest notes; escalate anything crash-related to the QA rotation."
+    },
+    {
+      "label": "Quickstart rewrite slice",
+      "when": "13:00",
+      "duration": "60m",
+      "action": "Advance TASK-061 with fresh 1.0 screenshots and matching first-run copy."
+    },
+    {
+      "label": "Review queue pass",
+      "when": "16:30",
+      "duration": "20m",
+      "action": "Resolve or explicitly defer the TASK-058 pricing packet; nothing stays silently pending."
+    }
+  ],
+  "boundaries": [
+    "Suggest-only plan; starting any block is an explicit user signal.",
+    "No browser writes, no memory writes, no external actions from this plan.",
+    "Daily Operations automation stays parked (TASK-056); this plan is a manual proposal."
+  ]
+}

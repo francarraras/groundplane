@@ -1,0 +1,36 @@
+{
+  "schema_version": "memory-claims.v1",
+  "updated_at": "2026-06-30",
+  "memory_claims": [
+    {
+      "id": "MC-001",
+      "claim": "Skylark beta users journal most consistently in the morning; onboarding defaults to a morning reminder.",
+      "type": "insight",
+      "domain": "product",
+      "status": "active",
+      "confidence": "high",
+      "source_ids": ["SRC-2026-06-20-001", "SRC-2026-06-14-002"],
+      "created_at": "2026-06-18",
+      "last_verified_at": "2026-06-30",
+      "supersedes": [],
+      "contradicts": [],
+      "sensitivity": "normal",
+      "approval_status": "approved"
+    },
+    {
+      "id": "MC-002",
+      "claim": "Playtesters read the original units toggle as a theme switch; the C002 relabel in beta 4 ended the confusion and the related support tickets.",
+      "type": "insight",
+      "domain": "product",
+      "status": "active",
+      "confidence": "medium",
+      "source_ids": ["SRC-2026-06-14-002", "SRC-2026-06-24-001"],
+      "created_at": "2026-06-18",
+      "last_verified_at": "2026-06-24",
+      "supersedes": [],
+      "contradicts": [],
+      "sensitivity": "normal",
+      "approval_status": "approved"
+    }
+  ]
+}

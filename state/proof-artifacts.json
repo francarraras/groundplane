@@ -1,0 +1,114 @@
+{
+  "schema_version": "proof-artifacts.v1",
+  "updated_at": "2026-06-30",
+  "proof_artifacts": [
+    {
+      "id": "PROOF-FLAGSHIP-001",
+      "project_id": "PROJ-001",
+      "title": "Skylark launch-readiness demo package",
+      "artifact_type": "local-demo",
+      "status": "ready",
+      "privacy": "private-local",
+      "sensitivity": "private",
+      "approval_mode": "draft-for-approval",
+      "summary": "Local, reviewable proof that Skylark 1.0 is launch-ready: deterministic demo build, smoke check, and a review doc tied to the submission checklist.",
+      "paths": {
+        "root": "proof/skylark-launch-demo",
+        "review_doc": "REVIEW.md",
+        "smoke_script": "smoke_check.py",
+        "browser_demo": "index.html"
+      },
+      "verification": {
+        "test_count": 42,
+        "test_status": "passing",
+        "smoke_status": "passing",
+        "last_run": "2026-06-30"
+      },
+      "capabilities": [
+        "Walks the full journal-entry and forecast loop on synthetic weather fixtures",
+        "Replays the C002 units-toggle fix from playtest round one",
+        "Shows the one-time pricing screen exactly as frozen in the store listing"
+      ],
+      "limitations": [
+        "Weather fixtures are deterministic and synthetic, not live provider data",
+        "No store API connection; submission remains a manual step",
+        "Demo build skips the opt-in crash reporter"
+      ],
+      "approval_boundary": "Read-only proof package. Reviewing or running it approves nothing; store submission and any pricing change still require their own review packets.",
+      "next_action": "Keep the package current through TASK-044 and TASK-050; re-run the smoke check after any launch-week fix.",
+      "linked_task_ids": ["TASK-040", "TASK-044"],
+      "linked_review_id": "REV-2026-06-21-001",
+      "source_ids": ["SRC-2026-06-18-001", "SRC-2026-06-13-002", "SRC-2026-06-30-001"]
+    },
+    {
+      "id": "PROOF-WEB-001",
+      "project_id": "PROJ-002",
+      "title": "Docs quickstart walkthrough package",
+      "artifact_type": "local-capture",
+      "status": "in-progress",
+      "privacy": "private-local",
+      "sensitivity": "private",
+      "approval_mode": "draft-for-approval",
+      "summary": "Screen-by-screen capture of the rewritten 1.0 quickstart so the docs can be judged on visible proof instead of memory.",
+      "paths": {
+        "root": "proof/docs-quickstart-walkthrough",
+        "review_doc": "REVIEW.md",
+        "smoke_script": "smoke_check.py",
+        "browser_demo": "index.html"
+      },
+      "verification": {
+        "test_count": 9,
+        "test_status": "passing",
+        "smoke_status": "pending",
+        "last_run": "2026-06-29"
+      },
+      "capabilities": [
+        "Replays the 1.0 first-run flow against the rewritten quickstart steps",
+        "Flags any doc step whose screenshot no longer matches the build"
+      ],
+      "limitations": [
+        "Covers the quickstart only, not the full guide set",
+        "Captured against the release-candidate build, not the store build"
+      ],
+      "approval_boundary": "Read-only capture. Publishing docs changes to ridgeline.example still requires an external_write review packet.",
+      "next_action": "Finish the capture after TASK-061 screenshots land, then run the smoke check.",
+      "linked_task_ids": ["TASK-061"],
+      "source_ids": ["SRC-2026-06-22-001", "SRC-2026-06-13-002"]
+    },
+    {
+      "id": "PROOF-COMMUNITY-001",
+      "project_id": "PROJ-003",
+      "title": "Beta survey results packet",
+      "artifact_type": "local-report",
+      "status": "ready",
+      "privacy": "private-local",
+      "sensitivity": "private",
+      "approval_mode": "draft-for-approval",
+      "summary": "Aggregated round-one survey packet: response tables, habit split, pricing signal, and the request ranking that feeds the v1.1 scope draft.",
+      "paths": {
+        "root": "proof/beta-survey-results",
+        "review_doc": "REVIEW.md",
+        "smoke_script": "smoke_check.py",
+        "browser_demo": "index.html"
+      },
+      "verification": {
+        "test_count": 6,
+        "test_status": "passing",
+        "smoke_status": "passing",
+        "last_run": "2026-06-20"
+      },
+      "capabilities": [
+        "Rebuilds every summary table from the raw response export deterministically",
+        "Cross-checks the pricing signal against the decision worksheet"
+      ],
+      "limitations": [
+        "Aggregates only; individual responses stay out of the packet by design",
+        "Round-two comparison waits on TASK-077"
+      ],
+      "approval_boundary": "Read-only report. Promoting survey insights to memory claims requires a memory_write review packet.",
+      "next_action": "Hold as the evidence base for TASK-080 v1.1 scoping.",
+      "linked_task_ids": ["TASK-071"],
+      "source_ids": ["SRC-2026-06-20-001", "SRC-2026-06-14-002"]
+    }
+  ]
+}

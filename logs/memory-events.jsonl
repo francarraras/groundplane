@@ -1,0 +1,4 @@
+{"ts": "2026-06-18T19:12:00Z", "event": "memory_promotion", "claim_id": "MC-001", "review_id": "ERF-C002", "approval_status": "approved", "confidence": "high", "source_ids": ["SRC-2026-06-20-001", "SRC-2026-06-14-002"], "actor": "operator"}
+{"ts": "2026-06-18T19:13:00Z", "event": "memory_promotion", "claim_id": "MC-002", "review_id": "ERF-C002", "approval_status": "approved", "confidence": "medium", "source_ids": ["SRC-2026-06-14-002", "SRC-2026-06-24-001"], "actor": "operator"}
+{"ts": "2026-06-24T18:05:00Z", "event": "memory_verification", "claim_id": "MC-002", "result": "verified", "last_verified_at": "2026-06-24", "source_ids": ["SRC-2026-06-24-001"], "actor": "operator"}
+{"ts": "2026-06-30T09:15:00Z", "event": "memory_verification", "claim_id": "MC-001", "result": "verified", "last_verified_at": "2026-06-30", "source_ids": ["SRC-2026-06-30-001"], "actor": "operator"}

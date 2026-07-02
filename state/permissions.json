@@ -1,0 +1,116 @@
+{
+  "schema_version": "permissions.v1",
+  "updated_at": "2026-06-16",
+  "permission_modes": [
+    {
+      "mode": "automatic-low-risk",
+      "meaning": "The app may do this on its own; read-only or trivially reversible.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "mode": "suggest-only",
+      "meaning": "The app may propose this in the interface; nothing durable changes without the operator.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "mode": "draft-for-approval",
+      "meaning": "The action becomes a review packet in reviews/queue.json and waits for an explicit approve, revise, or reject.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "mode": "forbidden-in-V0",
+      "meaning": "The action cannot execute in V0 at all, regardless of approval.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    }
+  ],
+  "actions": [
+    {
+      "action_type": "dashboard_refresh",
+      "mode": "automatic-low-risk",
+      "risk": "low",
+      "requires_explicit_approval": false,
+      "rule": "Re-reading local state and the graph index is always safe; no durable write.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "action_type": "daily_brief",
+      "mode": "suggest-only",
+      "risk": "low",
+      "requires_explicit_approval": false,
+      "rule": "The daily brief is a proposal surface; it recommends one move and writes nothing.",
+      "source_ids": ["SRC-2026-06-13-001", "SRC-2026-06-13-003"]
+    },
+    {
+      "action_type": "source_inspect",
+      "mode": "automatic-low-risk",
+      "risk": "low",
+      "requires_explicit_approval": false,
+      "rule": "Inspect source metadata already loaded by the app. No durable write.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "action_type": "explain_relationship",
+      "mode": "suggest-only",
+      "risk": "low",
+      "requires_explicit_approval": false,
+      "rule": "Explain why a connection exists using visible evidence only.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "action_type": "draft_review_item",
+      "mode": "draft-for-approval",
+      "risk": "medium",
+      "requires_explicit_approval": true,
+      "rule": "Prepare a review packet targeting reviews/queue.json. Do not write memory or state directly.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "action_type": "project_state_update",
+      "mode": "draft-for-approval",
+      "risk": "medium",
+      "requires_explicit_approval": true,
+      "rule": "Project, task, and routine state changes move through the review queue before promotion.",
+      "source_ids": ["SRC-2026-06-13-001", "SRC-2026-06-13-003"]
+    },
+    {
+      "action_type": "memory_write",
+      "mode": "draft-for-approval",
+      "risk": "high",
+      "requires_explicit_approval": true,
+      "rule": "Memory claims are promoted only through an approved review packet; no automatic memory promotion in V0.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "action_type": "external_write",
+      "mode": "draft-for-approval",
+      "risk": "high",
+      "requires_explicit_approval": true,
+      "rule": "Anything leaving the machine (website publish, store submission copy, outbound messages) needs its own approved packet.",
+      "source_ids": ["SRC-2026-06-13-001", "SRC-2026-06-18-001"]
+    },
+    {
+      "action_type": "raw_source_rewrite",
+      "mode": "forbidden-in-V0",
+      "risk": "high",
+      "requires_explicit_approval": true,
+      "rule": "Raw sources are append-only truth; rewriting them is forbidden in V0.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "action_type": "finance_action",
+      "mode": "forbidden-in-V0",
+      "risk": "high",
+      "requires_explicit_approval": true,
+      "rule": "Invoices, refunds, and any money movement stay outside the system until permissioning is proven.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    },
+    {
+      "action_type": "contacts_action",
+      "mode": "forbidden-in-V0",
+      "risk": "high",
+      "requires_explicit_approval": true,
+      "rule": "Tester contact details are never read or written by the app in V0.",
+      "source_ids": ["SRC-2026-06-13-001"]
+    }
+  ]
+}

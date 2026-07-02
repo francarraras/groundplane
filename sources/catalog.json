@@ -1,0 +1,126 @@
+{
+  "schema_version": "source-catalog.v1",
+  "updated_at": "2026-06-30",
+  "sources": [
+    {
+      "id": "SRC-2026-06-13-001",
+      "type": "note",
+      "title": "Ridgeline Studio operating notes",
+      "path": "sources/raw/2026-06-13-studio-operating-notes.md",
+      "created_at": "2026-06-13",
+      "captured_by": "operator",
+      "trust_level": "user-provided",
+      "sensitivity": "internal",
+      "status": "active",
+      "summary": "How Ridgeline Studio runs during the Skylark 1.0 launch window: one gate at a time, every durable change through the review queue, cockpit stays read-only."
+    },
+    {
+      "id": "SRC-2026-06-13-002",
+      "type": "import",
+      "title": "Skylark user-guide draft import",
+      "path": "sources/raw/2026-06-13-skylark-user-guide-import.md",
+      "created_at": "2026-06-13",
+      "captured_by": "operator",
+      "trust_level": "user-provided",
+      "sensitivity": "normal",
+      "status": "active",
+      "summary": "Imported draft of the Skylark weather-journal user guide: daily loop, tab meanings, proof rules for judging launch readiness, and v1.0 limits."
+    },
+    {
+      "id": "SRC-2026-06-13-003",
+      "type": "intake",
+      "title": "Routine intake capture",
+      "path": "sources/raw/2026-06-13-routine-intake.md",
+      "created_at": "2026-06-13",
+      "captured_by": "operator",
+      "trust_level": "user-provided",
+      "sensitivity": "internal",
+      "status": "active",
+      "summary": "Messy bullets from the studio pair describing the launch-week cadence: standup, feedback triage, support digest, ship review, and monthly books."
+    },
+    {
+      "id": "SRC-2026-06-14-002",
+      "type": "feedback",
+      "title": "Playtest feedback synthesis, round one",
+      "path": "sources/raw/2026-06-14-playtest-feedback-synthesis.md",
+      "created_at": "2026-06-14",
+      "captured_by": "operator",
+      "trust_level": "user-provided",
+      "sensitivity": "internal",
+      "status": "active",
+      "summary": "Synthesis of 25 beta playtest sessions for Skylark: onboarding friction, the units-toggle confusion (finding C002), and the morning journaling pattern."
+    },
+    {
+      "id": "SRC-2026-06-16-001",
+      "type": "worksheet",
+      "title": "Skylark pricing decision worksheet",
+      "path": "sources/raw/2026-06-16-pricing-decision-worksheet.md",
+      "created_at": "2026-06-16",
+      "captured_by": "operator",
+      "trust_level": "user-provided",
+      "sensitivity": "internal",
+      "status": "active",
+      "summary": "Options and margins for Skylark 1.0 pricing: one-time purchase, subscription, and freemium tip-jar paths, with the locked one-time recommendation."
+    },
+    {
+      "id": "SRC-2026-06-18-001",
+      "type": "checklist",
+      "title": "App-store submission checklist",
+      "path": "sources/raw/2026-06-18-app-store-submission-checklist.md",
+      "created_at": "2026-06-18",
+      "captured_by": "operator",
+      "trust_level": "operator-verified",
+      "sensitivity": "normal",
+      "status": "active",
+      "summary": "Step-by-step store submission checklist for Skylark 1.0: listing assets, privacy labels, review notes, dry run, and the 2026-06-24 submission cutoff."
+    },
+    {
+      "id": "SRC-2026-06-20-001",
+      "type": "survey",
+      "title": "Beta survey results, round one",
+      "path": "sources/raw/2026-06-20-beta-survey-results.md",
+      "created_at": "2026-06-20",
+      "captured_by": "operator",
+      "trust_level": "user-provided",
+      "sensitivity": "internal",
+      "status": "active",
+      "summary": "Aggregated beta survey results: 21 of 25 responses, morning journaling majority, top feature requests, and willingness-to-pay signal for one-time pricing."
+    },
+    {
+      "id": "SRC-2026-06-22-001",
+      "type": "review",
+      "title": "Website and docs copy review",
+      "path": "sources/raw/2026-06-22-website-docs-copy-review.md",
+      "created_at": "2026-06-22",
+      "captured_by": "operator",
+      "trust_level": "user-provided",
+      "sensitivity": "normal",
+      "status": "active",
+      "summary": "Copy review pass over ridgeline.example and the Skylark docs: quickstart gaps, pricing page wording, and changelog page plan."
+    },
+    {
+      "id": "SRC-2026-06-24-001",
+      "type": "digest",
+      "title": "Support inbox digest, week 26",
+      "path": "sources/raw/2026-06-24-support-inbox-digest.md",
+      "created_at": "2026-06-24",
+      "captured_by": "operator",
+      "trust_level": "user-provided",
+      "sensitivity": "internal",
+      "status": "active",
+      "summary": "Weekly support digest: 14 beta tickets, top themes (units toggle fixed, reminder timing, export requests), and reply-macro coverage."
+    },
+    {
+      "id": "SRC-2026-06-30-001",
+      "type": "review",
+      "title": "Launch-week readiness review",
+      "path": "sources/raw/2026-06-30-launch-week-readiness-review.md",
+      "created_at": "2026-06-30",
+      "captured_by": "operator",
+      "trust_level": "operator-verified",
+      "sensitivity": "internal",
+      "status": "active",
+      "summary": "Final readiness review before the store submission gate: verification status of the launch demo package, open risks, and the parked Daily Operations decision."
+    }
+  ]
+}
