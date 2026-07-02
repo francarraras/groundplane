@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Groundplane</title>
+    <style>
+      .file-open-guard-panel {
+        display: grid;
+        gap: 14px;
+        max-width: 680px;
+        margin: 9vh auto;
+        padding: 24px;
+        border: 1px solid rgba(214, 169, 104, 0.42);
+        border-radius: 8px;
+        background: #071018;
+        color: #f1eadc;
+        font-family: "Avenir Next", "Helvetica Neue", Helvetica, sans-serif;
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.46);
+      }
+
+      .file-open-guard-panel h1 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 1.8rem;
+        line-height: 1.1;
+      }
+
+      .file-open-guard-panel p {
+        margin: 0;
+        color: #d1c7b6;
+        line-height: 1.5;
+      }
+
+      .file-open-guard-panel a {
+        justify-self: start;
+        padding: 10px 13px;
+        border: 1px solid rgba(214, 169, 104, 0.58);
+        border-radius: 8px;
+        color: #04070b;
+        background: #d6a968;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .file-open-guard-panel code {
+        padding: 2px 6px;
+        border: 1px solid rgba(231, 222, 202, 0.16);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #f1eadc;
+      }
+    </style>
+    <script>
+      (() => {
+        if (window.location.protocol !== "file:") return;
+
+        const devUrl = "http://127.0.0.1:5175/app/";
+        const renderFileOpenGuard = () => {
+          document.body.innerHTML = `
+            <main class="file-open-guard-panel">
+              <h1>Groundplane needs the local server</h1>
+              <p>Do not open app/index.html directly. The app reads local state through the Vite dev server, so file mode cannot load the map, styles, or current block.</p>
+              <a href="${devUrl}">Open the local app</a>
+              <p>If that link is not running, start it from this project with <code>npm run app:local</code> and open <code>${devUrl}</code>.</p>
+            </main>
+          `;
+        };
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", renderFileOpenGuard, { once: true });
+          return;
+        }
+
+        renderFileOpenGuard();
+      })();
+    </script>
+    <link rel="stylesheet" href="/app/src/styles.css">
+  </head>
+  <body>
+    <div class="product-shell" id="product-app" data-inspector-state="collapsed">
+      <aside class="left-nav atlas-rail" id="left-nav" aria-label="Areas">
+        <div class="brand-lockup">
+          <div class="brand-mark">A2</div>
+          <div>
+            <strong>Groundplane</strong>
+            <span>Personal operating map</span>
+          </div>
+        </div>
+        <div class="rail-heading">Areas</div>
+        <nav id="region-list" aria-label="Areas"></nav>
+      </aside>
+
+      <main class="atrium">
+        <header class="top-command" aria-label="Primary command controls">
+          <button class="atlas-home-button" id="atlas-home" type="button" aria-label="Home">
+            <span aria-hidden="true">⌂</span>
+            <span class="atlas-home-label">Home</span>
+          </button>
+          <button class="icon-button deck-toggle-button" id="toggle-inspector" type="button" aria-label="Show Details" title="Show Details" aria-pressed="false" data-toggle-state="idle">
+            <span aria-hidden="true">◫</span>
+            <span class="deck-toggle-label">Details</span>
+          </button>
+          <label class="command-bar" id="command-bar" for="command-input">
+            <span>⌕</span>
+            <input id="command-input" type="search" autocomplete="off" placeholder="Search areas or actions...">
+          </label>
+          <div class="system-pulse" id="system-pulse">Loading status</div>
+        </header>
+
+        <section class="world-stage" aria-label="Thought map">
+          <div class="world-root" id="world-root"></div>
+          <div class="world-labels" id="world-labels" aria-live="polite"></div>
+          <div class="world-orientation" id="world-orientation" aria-live="polite"></div>
+          <div class="district-breadcrumb" id="district-breadcrumb" aria-label="Map breadcrumb"></div>
+          <div class="focus-card" id="focus-card"></div>
+          <div class="spatial-command-overlay" id="spatial-command-overlay" aria-label="Today command overlay"></div>
+          <div class="world-navigation" aria-label="Map controls">
+            <button class="world-nav-button is-home" id="home-world" type="button" aria-label="Home" title="Home">⌂</button>
+            <button class="world-nav-button" id="relation-prev-world" type="button" aria-label="Previous connection" title="Previous connection" data-relationship-nav="true">&lt;</button>
+            <button class="world-nav-button" id="relation-next-world" type="button" aria-label="Next connection" title="Next connection" data-relationship-nav="true">&gt;</button>
+            <button class="world-nav-button" id="orbit-left-world" type="button" aria-label="Orbit left" title="Orbit left">↺</button>
+            <button class="world-nav-button" id="zoom-in-world" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+            <button class="world-nav-button" id="zoom-out-world" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+            <button class="world-nav-button" id="orbit-right-world" type="button" aria-label="Orbit right" title="Orbit right">↻</button>
+          </div>
+        </section>
+
+        <footer class="bottom-instruments" id="bottom-instruments">
+          <button class="play-button" id="run-current-block" type="button" aria-label="Start: open next steps" title="Start: open next steps">
+            <span aria-hidden="true">▶</span>
+            <span class="play-button-label">Start</span>
+          </button>
+          <div class="current-block" id="current-block">Loading current step</div>
+          <div class="mode-strip" id="mode-strip"></div>
+        </footer>
+      </main>
+
+      <aside class="inspector" id="inspector" aria-label="Selected area details"></aside>
+    </div>
+
+    <div
+      class="command-palette"
+      id="command-palette"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="command-palette-title"
+      hidden
+    >
+      <div class="command-panel">
+        <h2 id="command-palette-title">Search</h2>
+        <input
+          id="palette-input"
+          type="search"
+          autocomplete="off"
+          aria-label="Search areas, links, and actions"
+          placeholder="Search areas, links, and actions..."
+        >
+        <div id="palette-results"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/app/src/main.js"></script>
+  </body>
+</html>
