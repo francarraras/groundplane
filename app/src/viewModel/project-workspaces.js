@@ -1,13 +1,22 @@
 import { buildRoadmapCandidates, normalizeAssistantText } from "./assistant-surfaces.js";
 import { FIRST_PROJECT_WORKSPACE_ID } from "./constants.js";
-import { asArray, localCommand, relationshipTouches, shellQuote, sortedUnique, taskById, verificationText } from "./helpers.js";
+import {
+  asArray,
+  localCommand,
+  relationshipTouches,
+  shellQuote,
+  sortedUnique,
+  taskById,
+  toRepoRelativePath,
+  verificationText,
+} from "./helpers.js";
 
 function proofLauncherModel(proofPackage) {
   if (!proofPackage) return null;
 
-  const root = proofPackage.artifactPath || "";
-  const reviewDoc = proofPackage.reviewDoc || "";
-  const smokeScript = proofPackage.smokeScript || "";
+  const root = toRepoRelativePath(proofPackage.artifactPath || "");
+  const reviewDoc = toRepoRelativePath(proofPackage.reviewDoc || "");
+  const smokeScript = toRepoRelativePath(proofPackage.smokeScript || "");
 
   return {
     id: proofPackage.id,
@@ -17,7 +26,7 @@ function proofLauncherModel(proofPackage) {
     launcherRouteId: `proof-launcher:${proofPackage.id}`,
     artifactPath: root || "none",
     reviewDoc: reviewDoc || "none",
-    browserDemo: proofPackage.browserDemo || "none",
+    browserDemo: toRepoRelativePath(proofPackage.browserDemo || "") || "none",
     verification: proofPackage.verification,
     sourceIds: proofPackage.sourceIds,
     reviewCommand: localCommand(root, reviewDoc ? `open ${shellQuote(reviewDoc)}` : ""),
@@ -41,10 +50,10 @@ export function proofArtifactSummary(artifact, tasks) {
     status: artifact.status || "unknown",
     privacy: artifact.privacy || "private-local",
     currentGate: nextMainTask?.id || proofDecisionTask?.id || "unknown",
-    artifactPath: paths.root || "none",
-    reviewDoc: paths.review_doc || "none",
-    smokeScript: paths.smoke_script || "none",
-    browserDemo: paths.browser_demo || "none",
+    artifactPath: toRepoRelativePath(paths.root) || "none",
+    reviewDoc: toRepoRelativePath(paths.review_doc) || "none",
+    smokeScript: toRepoRelativePath(paths.smoke_script) || "none",
+    browserDemo: toRepoRelativePath(paths.browser_demo) || "none",
     verification: verificationText(artifact.verification),
     capabilities: asArray(artifact.capabilities),
     limitations: asArray(artifact.limitations),

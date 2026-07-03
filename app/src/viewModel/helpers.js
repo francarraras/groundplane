@@ -14,6 +14,23 @@ export function command(id, label, kind, detail) {
   return { id, label, kind, detail };
 }
 
+// Never render an absolute filesystem path (#35): those leak machine/user
+// layout into every screenshot and aren't portable. Reduce any absolute path
+// to a repo-relative one. Already-relative paths pass through untouched.
+export function toRepoRelativePath(value) {
+  const text = String(value ?? "");
+  if (!text) return text;
+  const isAbsolute = /^(?:[A-Za-z]:[\\/]|[\\/])/.test(text) || text.includes(":\\");
+  if (!isAbsolute && !text.includes("/Users/") && !text.includes("/home/")) return text;
+  const afterRoot = text.match(/(?:^|[\\/])groundplane[\\/](.+)$/);
+  if (afterRoot) return afterRoot[1].replace(/\\/g, "/");
+  const afterTopDir = text.match(
+    /(?:^|[\\/])((?:proof|sources|state|reviews|wiki|indexes|app|packages|scripts|docs|runs|logs)[\\/].+)$/,
+  );
+  if (afterTopDir) return afterTopDir[1].replace(/\\/g, "/");
+  return text.split(/[\\/]/).pop() || text;
+}
+
 export function asArray(value) {
   return Array.isArray(value) ? value : [];
 }

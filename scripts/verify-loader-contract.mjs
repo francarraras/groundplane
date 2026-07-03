@@ -94,6 +94,13 @@ assert.deepEqual(degraded.layout.pins, {}, "missing layout degrades to an empty 
 // The app still builds a model when the graph is unavailable (no crash).
 assert.doesNotThrow(() => buildSurfaceModel(degraded), "model builds without a relationship graph");
 
+// 4) No absolute filesystem path renders in demo mode (#35) — paths must be
+//    repo-relative so screenshots and demos never leak machine/user layout.
+const rendered = JSON.stringify(model);
+assert.doesNotMatch(rendered, /\/Users\//, "no /Users/ path renders in the model");
+assert.doesNotMatch(rendered, /\/home\/[^"/]+\//, "no /home/<user>/ path renders in the model");
+assert.doesNotMatch(rendered, /[A-Za-z]:\\\\/, "no Windows absolute path renders in the model");
+
 console.log(
   `loader contract ok: ${model.districts.length} areas, ${expectedActiveTasks} active tasks, ${expectedPending} pending reviews — all derived from fixtures`,
 );
