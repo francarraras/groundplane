@@ -1,3 +1,5 @@
+import { publicText } from "../publicText.js";
+
 export function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -31,29 +33,9 @@ export function asArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
-export function publicText(value = "") {
-  return String(value ?? "")
-    .replace(/\bDistricts\b/g, "Areas")
-    .replace(/\bdistricts\b/g, "areas")
-    .replace(/\bDistrict\b/g, "Area")
-    .replace(/\bdistrict\b/g, "area")
-    .replace(/\bRegions\b/g, "Areas")
-    .replace(/\bregions\b/g, "areas")
-    .replace(/\bRegion\b/g, "Area")
-    .replace(/\bregion\b/g, "area")
-    .replace(/\bNodes\b/g, "Items")
-    .replace(/\bnodes\b/g, "items")
-    .replace(/\bNode\b/g, "Item")
-    .replace(/\bnode\b/g, "item")
-    .replace(/\bRelationships\b/g, "Connections")
-    .replace(/\brelationships\b/g, "connections")
-    .replace(/\bRelationship\b/g, "Connection")
-    .replace(/\brelationship\b/g, "connection")
-    .replace(/\bRelations\b/g, "Connections")
-    .replace(/\brelations\b/g, "connections")
-    .replace(/\bRelation\b/g, "Connection")
-    .replace(/\brelation\b/g, "connection");
-}
+// Re-exported from the shared public-wording layer (#33) so the many
+// instruments modules that import it from here keep working unchanged.
+export { publicText };
 
 export function publicTitle(value, fallback = "Untitled area") {
   const text = String(value || fallback)

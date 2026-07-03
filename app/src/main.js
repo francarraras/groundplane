@@ -5,6 +5,7 @@ import { createCommandPalette } from "./commands.js";
 import { buildReviewDraftPreview } from "./reviewDraft.js";
 import { renderDistrictBreadcrumb, renderInstruments, renderInspector, renderWorldLabels } from "./instruments.js";
 import { buildContextBundle, serializeContextBundle } from "./contextBundle.js";
+import { publicText as publicUiText } from "./publicText.js";
 
 const elements = {
   app: document.querySelector("#product-app"),
@@ -52,30 +53,6 @@ let sourceCatalog = [];
 
 function asArray(value) {
   return Array.isArray(value) ? value : [];
-}
-
-function publicUiText(value = "") {
-  return String(value ?? "")
-    .replace(/\bDistricts\b/g, "Areas")
-    .replace(/\bdistricts\b/g, "areas")
-    .replace(/\bDistrict\b/g, "Area")
-    .replace(/\bdistrict\b/g, "area")
-    .replace(/\bRegions\b/g, "Areas")
-    .replace(/\bregions\b/g, "areas")
-    .replace(/\bRegion\b/g, "Area")
-    .replace(/\bregion\b/g, "area")
-    .replace(/\bNodes\b/g, "Items")
-    .replace(/\bnodes\b/g, "items")
-    .replace(/\bNode\b/g, "Item")
-    .replace(/\bnode\b/g, "item")
-    .replace(/\bRelationships\b/g, "Connections")
-    .replace(/\brelationships\b/g, "connections")
-    .replace(/\bRelationship\b/g, "Connection")
-    .replace(/\brelationship\b/g, "connection")
-    .replace(/\bRelations\b/g, "Connections")
-    .replace(/\brelations\b/g, "connections")
-    .replace(/\bRelation\b/g, "Connection")
-    .replace(/\brelation\b/g, "connection");
 }
 
 function publicUiTitle(value, fallback = "Current focus") {
