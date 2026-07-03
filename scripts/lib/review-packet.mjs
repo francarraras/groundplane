@@ -1,3 +1,4 @@
+// @ts-check
 import path from "node:path";
 
 const REQUIRED_APPROVAL_FIELDS = ["preview_id", "target_file", "risk", "source_ids", "undo_path", "reason"];
@@ -94,6 +95,12 @@ function slugToken(value) {
   );
 }
 
+/**
+ * Validate a browser-drafted review-packet preview against the source catalog.
+ * @param {any} preview
+ * @param {any} [sourceCatalog]
+ * @returns {any} the normalized preview
+ */
 export function validateReviewPacketPreview(preview, sourceCatalog = {}) {
   if (!isPlainObject(preview)) fail("preview must be one review_packet_preview object");
   if (preview.type !== "review_packet_preview") fail('preview.type must be "review_packet_preview"');
@@ -110,6 +117,11 @@ export function validateReviewPacketPreview(preview, sourceCatalog = {}) {
   return { ...preview, source_ids: sourceIds };
 }
 
+/**
+ * @param {any} approval
+ * @param {any} preview
+ * @returns {any} the normalized approval
+ */
 export function validateHandoffApproval(approval, preview) {
   if (!isPlainObject(approval)) fail("approval must be one object");
   for (const field of REQUIRED_APPROVAL_FIELDS) {
@@ -138,6 +150,10 @@ export function validateReviewQueue(queue) {
   return queue;
 }
 
+/**
+ * @param {any} preview
+ * @returns {string}
+ */
 export function reviewIdForPreview(preview) {
   return `REV-${slugToken(preview.id)}`;
 }
@@ -176,6 +192,13 @@ export function reviewItemFromPreview(preview, approval, options = {}) {
   };
 }
 
+/**
+ * @param {any} queue
+ * @param {any} preview
+ * @param {any} approval
+ * @param {{ createdAt?: string }} [options]
+ * @returns {any} the queue with the pending item appended
+ */
 export function appendReviewItemForPreview(queue, preview, approval, options = {}) {
   validateReviewQueue(queue);
   if (previewAlreadyQueued(queue, preview)) {
@@ -237,6 +260,12 @@ export function validateReviewResolution(resolution, queue) {
   };
 }
 
+/**
+ * @param {any} queue
+ * @param {any} resolution
+ * @param {{ resolvedAt?: string }} [options]
+ * @returns {any} the queue with the resolution applied
+ */
 export function applyReviewResolution(queue, resolution, options = {}) {
   const validated = validateReviewResolution(resolution, queue);
   const resolvedAt = options.resolvedAt || new Date().toISOString().slice(0, 10);

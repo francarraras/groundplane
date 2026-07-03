@@ -37,4 +37,6 @@ assert.match(message, /\/projects\/0\/id/, "error points at the offending id pat
 assert.match(message, /\/projects\/0\/source_ids\/0/, "error points at the offending source id path");
 assert.match(message, /pattern/, "error explains the pattern violation");
 
-console.log(`schemas ok: ${SCHEMA_MAPPINGS.length} state files validate; broken fixtures are rejected with pointed messages`);
+console.log(
+  `schemas ok: ${SCHEMA_MAPPINGS.length} state files validate; broken fixtures are rejected with pointed messages`,
+);

@@ -5,11 +5,7 @@
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { buildSurfaceModel } from "../app/src/viewModel.js";
-import {
-  buildContextBundle,
-  serializeContextBundle,
-  DEFAULT_BUNDLE_MAX_BYTES,
-} from "../app/src/contextBundle.js";
+import { buildContextBundle, serializeContextBundle, DEFAULT_BUNDLE_MAX_BYTES } from "../app/src/contextBundle.js";
 
 function readJson(relative) {
   return JSON.parse(readFileSync(new URL(`../${relative}`, import.meta.url), "utf8"));
@@ -124,7 +120,9 @@ assert.ok(
 
 // 5) Cap enforcement: a tiny cap still yields valid JSON at or under the cap.
 const largest = baseModel.districts
-  .map((district) => buildContextBundle({ baseModel, model, activeDistrictId: district.id, sources: catalog }, { now: NOW }))
+  .map((district) =>
+    buildContextBundle({ baseModel, model, activeDistrictId: district.id, sources: catalog }, { now: NOW }),
+  )
   .sort((a, b) => b.stats.node_count - a.stats.node_count)[0];
 const capped = serializeContextBundle(largest, { maxBytes: 1500 });
 assert.doesNotThrow(() => JSON.parse(capped.json), "capped bundle is still valid JSON");
@@ -132,8 +130,16 @@ assert.ok(byteLength(capped.json) <= 1500, `capped bundle ${byteLength(capped.js
 assert.equal(capped.truncated, true, "capped bundle is flagged truncated");
 
 // 6) Determinism: identical inputs produce identical output.
-const a = buildContextBundle({ baseModel, model, activeDistrictId: baseModel.districts[0].id, sources: catalog }, { now: NOW });
-const b = buildContextBundle({ baseModel, model, activeDistrictId: baseModel.districts[0].id, sources: catalog }, { now: NOW });
+const a = buildContextBundle(
+  { baseModel, model, activeDistrictId: baseModel.districts[0].id, sources: catalog },
+  { now: NOW },
+);
+const b = buildContextBundle(
+  { baseModel, model, activeDistrictId: baseModel.districts[0].id, sources: catalog },
+  { now: NOW },
+);
 assert.equal(JSON.stringify(a), JSON.stringify(b), "bundle build is deterministic");
 
-console.log(`context bundle ok: ${bundlesChecked} fixture bundles valid, registered-source-only, under ${DEFAULT_BUNDLE_MAX_BYTES} bytes`);
+console.log(
+  `context bundle ok: ${bundlesChecked} fixture bundles valid, registered-source-only, under ${DEFAULT_BUNDLE_MAX_BYTES} bytes`,
+);

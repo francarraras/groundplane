@@ -1,27 +1,5 @@
 import { asArray, escapeHtml, pill, publicText, publicTitle, truncateText } from "./helpers.js";
 
-function renderRelatedDecisions(related) {
-  const decisions = asArray(related);
-  if (decisions.length === 0) {
-    return '<p class="empty-note">No locked decisions attached.</p>';
-  }
-
-  return `
-    <ul class="decision-list">
-      ${decisions
-        .map(
-          (decision) => `
-            <li>
-              <span>${escapeHtml(decision.id || "decision")}</span>
-              <strong>${escapeHtml(decision.title || "Untitled decision")}</strong>
-            </li>
-          `,
-        )
-        .join("")}
-    </ul>
-  `;
-}
-
 export function renderRelationshipList(related, selectedRelationshipId = null) {
   const items = asArray(related);
   if (items.length === 0) {
@@ -262,9 +240,6 @@ function renderConnectionLens(model, relationship) {
 export function renderSelectedRelationship(model, relationship) {
   if (!relationship) return "";
 
-  const fromTitle = relationship.fromTitle || regionTitle(model, relationship.from);
-  const toTitle = relationship.toTitle || regionTitle(model, relationship.to);
-  const pathTitle = relationshipPathTitle(fromTitle, toTitle);
   const lens = renderConnectionLens(model, relationship);
   if (!lens) return "";
   return `

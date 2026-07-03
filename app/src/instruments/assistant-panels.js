@@ -219,7 +219,7 @@ export function renderBrainAssistantBehavior(panel = null) {
   `;
 }
 
-function renderSystemHomeCockpit(cockpit = null) {
+export function renderSystemHomeCockpit(cockpit = null) {
   if (!cockpit) return "";
 
   const sections = asArray(cockpit.sections);
@@ -304,7 +304,7 @@ function renderSystemHomeCockpit(cockpit = null) {
   `;
 }
 
-function renderTodayCommandSurface(surface = null) {
+export function renderTodayCommandSurface(surface = null) {
   if (!surface) return "";
 
   const sections = asArray(surface.sections);

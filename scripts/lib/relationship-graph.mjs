@@ -1,3 +1,4 @@
+// @ts-check
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -145,6 +146,24 @@ function edgePermission({ inferred, sensitivity, permissionMode }) {
   return safeText(permissionMode, "automatic-low-risk");
 }
 
+/**
+ * Build a normalized graph node from a source record.
+ * @param {{
+ *   type: string,
+ *   id: string,
+ *   record?: any,
+ *   file: string,
+ *   recordId?: string,
+ *   sourceIds?: string[],
+ *   title?: string,
+ *   summary?: string,
+ *   domain?: string,
+ *   status?: string,
+ *   confidence?: string,
+ *   sensitivity?: string,
+ *   permissionMode?: string,
+ * }} descriptor
+ */
 function makeNode({
   type,
   id,
@@ -323,6 +342,10 @@ export async function readJsonFile(root, relativePath, { required = true } = {})
   }
 }
 
+/**
+ * @param {string} root repository root
+ * @returns {Promise<Record<string, any>>}
+ */
 export async function loadGraphInputs(root) {
   const entries = await Promise.all(
     GRAPH_SOURCE_FILES.map(async (relativePath) => [
@@ -333,6 +356,12 @@ export async function loadGraphInputs(root) {
   return Object.fromEntries(entries);
 }
 
+/**
+ * Compile the deterministic relationship graph from workspace state inputs.
+ * @param {Record<string, any>} inputs
+ * @param {{ now?: string, fallbackSourceIds?: { routine?: string, system?: string } }} [options]
+ * @returns {{ schema_version: string, generated_at: string|null, source_files: string[], stats: any, nodes: any[], edges: any[], clusters: any[], layout: any, warnings: any[] }}
+ */
 export function buildRelationshipGraph(inputs, { now, fallbackSourceIds = {} } = {}) {
   const routineFallbackIds = fallbackSourceIds.routine ? [fallbackSourceIds.routine] : [];
   const systemFallbackIds = fallbackSourceIds.system ? [fallbackSourceIds.system] : [];
@@ -805,6 +834,11 @@ export function buildRelationshipGraph(inputs, { now, fallbackSourceIds = {} } =
   };
 }
 
+/**
+ * @param {string} root repository root
+ * @param {any} graph the compiled relationship graph
+ * @returns {Promise<void>}
+ */
 export async function writeRelationshipGraph(root, graph) {
   const indexesDir = path.resolve(root, "indexes");
   await mkdir(indexesDir, { recursive: true });

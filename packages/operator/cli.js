@@ -75,7 +75,9 @@ async function main() {
       model: typeof flags.model === "string" ? flags.model : undefined,
     });
     if (result.selection?.unmatched) {
-      console.warn(`warning: region "${result.selection.unmatched}" did not match a cluster or node; answered over the whole atlas.`);
+      console.warn(
+        `warning: region "${result.selection.unmatched}" did not match a cluster or node; answered over the whole atlas.`,
+      );
     }
     console.log(`\n${result.answer}\n`);
     console.log(
@@ -87,7 +89,13 @@ async function main() {
   }
 
   if (command === "propose") {
-    const sources = typeof flags.sources === "string" ? flags.sources.split(",").map((id) => id.trim()).filter(Boolean) : [];
+    const sources =
+      typeof flags.sources === "string"
+        ? flags.sources
+            .split(",")
+            .map((id) => id.trim())
+            .filter(Boolean)
+        : [];
     const result = runPropose({
       repoRoot: REPO_ROOT,
       summary: typeof flags.summary === "string" ? flags.summary : positionals.join(" "),
@@ -119,7 +127,11 @@ async function main() {
     });
     console.log(`Review ${result.reviewId} → ${result.decision}. reviews/queue.json updated.`);
     if (result.decision === "approve") {
-      console.log(result.rebuilt ? "Graph rebuilt." : `Graph rebuild skipped or failed${result.rebuildError ? `: ${result.rebuildError}` : ""}.`);
+      console.log(
+        result.rebuilt
+          ? "Graph rebuilt."
+          : `Graph rebuild skipped or failed${result.rebuildError ? `: ${result.rebuildError}` : ""}.`,
+      );
     }
     return;
   }

@@ -1,0 +1,31 @@
+node_modules/
+dist/
+playwright-report/
+test-results/
+blob-report/
+package-lock.json
+
+# Data and generated files — not Prettier's to format. The relationship graph
+# is written by the compiler in its own deterministic format (CI diffs it).
+indexes/
+state/
+reviews/
+sources/
+wiki/
+
+# Hand-formatted and/or substring-asserted by the contract tests — their exact
+# formatting is load-bearing, so Prettier does not own it (enforced by review).
+# Prettier governs the newer tooling code (packages/, schemas/, the operator and
+# QA verifiers, config files) so the baseline is established without churning
+# the asserted surface.
+app/src/
+index.html
+scripts/build-relationship-graph.mjs
+scripts/check-product-app.mjs
+scripts/leak-scan.mjs
+scripts/prepare-intake-review.mjs
+scripts/resolve-review-queue-entry.mjs
+scripts/verify-product-world-model.mjs
+scripts/verify-relationship-graph.mjs
+scripts/lib/relationship-graph.mjs
+scripts/lib/review-packet.mjs

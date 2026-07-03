@@ -1,7 +1,7 @@
 import { assistantBriefAria, assistantMiniLabel, renderSpatialCommandOverlay } from "./assistant-panels.js";
 import { renderCommandDeck } from "./command-deck.js";
 import { asArray, escapeHtml, pluralize, publicCountLabel, publicSubtitle, publicText, publicTitle, pulseLabel, safeColor, selectedRegion, truncateText } from "./helpers.js";
-import { regionTitle, relationshipById, relationshipsForRegion } from "./relationships.js";
+import { relationshipById, relationshipsForRegion } from "./relationships.js";
 
 const ATLAS_RAIL_REST_LIMIT = 7;
 
@@ -296,13 +296,6 @@ export function renderInspector(root, model, selectedId, selectedRelationshipId 
     ? [selectedRelationship, ...relationshipsForRegion(model, region, selectedId).filter((item) => item.id !== selectedRelationship.id)]
     : relationshipsForRegion(model, region, selectedId);
   const instruments = model?.instruments || {};
-  const activeTasks = asArray(model?.activeTasks);
-  const pendingReviews = asArray(model?.pendingReviews);
-  const resolvedReviews = asArray(model?.resolvedReviews);
-  const reviewQueue = model?.reviewQueue || { pending: pendingReviews, resolved: resolvedReviews };
-  const regions = asArray(model?.regions);
-  const graphWarnings = asArray(model?.graph?.warnings);
-  const evidenceSubject = selectedRelationship || region;
 
   if (!region) {
     root.innerHTML = `

@@ -1,3 +1,4 @@
+// @ts-check
 // JSON Schema validation for the public state files (#21).
 //
 // The state files are the project's public API. These schemas (schemas/*.json)
@@ -18,14 +19,24 @@ export const SCHEMA_MAPPINGS = [
 ];
 
 function ajv() {
-  return new Ajv({ allErrors: true, strict: false });
+  const AjvCtor = /** @type {any} */ (Ajv);
+  return new AjvCtor({ allErrors: true, strict: false });
 }
 
+/**
+ * @param {string} repoRoot
+ * @param {string} schemaName
+ * @returns {any}
+ */
 function loadSchema(repoRoot, schemaName) {
   return JSON.parse(readFileSync(path.join(repoRoot, "schemas", schemaName), "utf8"));
 }
 
-// Pointed, human-readable error lines (path + what's wrong).
+/**
+ * Pointed, human-readable error lines (path + what's wrong).
+ * @param {any[]} [errors]
+ * @returns {string}
+ */
 export function formatErrors(errors) {
   return (errors || [])
     .map((error) => {
@@ -36,12 +47,22 @@ export function formatErrors(errors) {
     .join("\n");
 }
 
+/**
+ * @param {string} repoRoot
+ * @param {string} schemaName
+ * @param {any} data
+ * @returns {{ ok: boolean, errors: any[] }}
+ */
 export function validateDataAgainstSchema(repoRoot, schemaName, data) {
   const validate = ajv().compile(loadSchema(repoRoot, schemaName));
   const ok = validate(data);
   return { ok, errors: ok ? [] : validate.errors };
 }
 
+/**
+ * @param {string} repoRoot
+ * @returns {{ ok: boolean, results: Array<{ schema: string, file: string, ok: boolean, errors: any[] }> }}
+ */
 export function validateWorkspaceSchemas(repoRoot) {
   const results = SCHEMA_MAPPINGS.map(({ schema, file }) => {
     const data = JSON.parse(readFileSync(path.join(repoRoot, file), "utf8"));
@@ -51,7 +72,11 @@ export function validateWorkspaceSchemas(repoRoot) {
   return { ok: results.every((result) => result.ok), results };
 }
 
-// Throwing variant for callers (e.g. the graph compiler) that must fail fast.
+/**
+ * Throwing variant for callers (e.g. the graph compiler) that must fail fast.
+ * @param {string} repoRoot
+ * @returns {void}
+ */
 export function assertWorkspaceSchemas(repoRoot) {
   const { ok, results } = validateWorkspaceSchemas(repoRoot);
   if (ok) return;

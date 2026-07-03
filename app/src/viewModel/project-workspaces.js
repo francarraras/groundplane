@@ -1,6 +1,6 @@
 import { buildRoadmapCandidates, normalizeAssistantText } from "./assistant-surfaces.js";
 import { FIRST_PROJECT_WORKSPACE_ID } from "./constants.js";
-import { asArray, command, localCommand, relationshipTouches, shellQuote, sortedUnique, taskById, verificationText } from "./helpers.js";
+import { asArray, localCommand, relationshipTouches, shellQuote, sortedUnique, taskById, verificationText } from "./helpers.js";
 
 function proofLauncherModel(proofPackage) {
   if (!proofPackage) return null;

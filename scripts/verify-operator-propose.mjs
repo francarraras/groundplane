@@ -51,7 +51,10 @@ const readQueue = (queuePath) => JSON.parse(readFileSync(queuePath, "utf8"));
   assert.deepEqual(item.source_ids, sourceIds, "source ids preserved");
   assert.equal(item.requires_explicit_approval, true, "requires explicit approval");
 
-  const log = readFileSync(ws.logPath, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+  const log = readFileSync(ws.logPath, "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line));
   assert.equal(log[0].result, "proposal_only", "propose logs proposal_only");
   assert.deepEqual(log[0].review_items, [result.reviewId], "log references the review id");
 
@@ -79,7 +82,10 @@ const readQueue = (queuePath) => JSON.parse(readFileSync(queuePath, "utf8"));
   assert.equal(afterItem.resolution_decision, "approve", "resolution recorded");
   assert.equal(afterItem.resolved_by, "Fran", "actor recorded");
 
-  const log2 = readFileSync(ws.logPath, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+  const log2 = readFileSync(ws.logPath, "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line));
   assert.equal(log2.length, 2, "approve appends a log line");
   assert.equal(log2[1].operation, "resolve_review", "resolve logged");
   assert.equal(log2[1].result, "approved", "approved result logged");
@@ -196,4 +202,6 @@ function assertNoWrite(label, before, ws) {
   rmSync(ws.dir, { recursive: true, force: true });
 }
 
-console.log("operator propose ok: propose→pending→approve applies + rebuilds; malformed packets rejected with no write");
+console.log(
+  "operator propose ok: propose→pending→approve applies + rebuilds; malformed packets rejected with no write",
+);

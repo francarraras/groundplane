@@ -26,6 +26,9 @@ npm run verify:local     # full local verification
 | `npm run test:operator` / `test:operator-propose` | Operator CLI `ask` and `propose`/`approve` |
 | `npm run leak:scan` | Personal/secret string gate |
 | `npm run verify:local` | All of the above + production build |
+| `npm run lint` | ESLint (flat config, minimal high-signal rules) |
+| `npm run format` / `format:check` | Prettier write / check (code + config; data and hand-formatted files are ignored) |
+| `npm run typecheck` | `tsc --checkJs` on `scripts/lib` (JSDoc-typed public functions) |
 | `npm run test:browser` | Fixture-based browser QA (needs a browser; see below) |
 
 ## Test suites (what guards what)

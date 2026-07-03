@@ -23,12 +23,14 @@ function asArray(value) {
 }
 
 function slug(value) {
-  return String(value || "change")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 40) || "change";
+  return (
+    String(value || "change")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 40) || "change"
+  );
 }
 
 export function runPropose(options = {}) {

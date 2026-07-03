@@ -43,7 +43,9 @@ const WRITE_SPY = (allowed) => {
   }
   const origFetch = window.fetch;
   window.fetch = function fetchSpy(input, init) {
-    const method = String((init && init.method) || (typeof input === "object" && input && input.method) || "GET").toUpperCase();
+    const method = String(
+      (init && init.method) || (typeof input === "object" && input && input.method) || "GET",
+    ).toUpperCase();
     if (method !== "GET" && method !== "HEAD") window.__writeViolations.push({ api: "fetch", method });
     return origFetch.apply(this, arguments);
   };
@@ -74,10 +76,7 @@ test("core read-only chrome is present", async ({ page }) => {
 });
 
 test("exporting the selection downloads a valid, source-cited bundle", async ({ page }) => {
-  const [download] = await Promise.all([
-    page.waitForEvent("download"),
-    page.click("#export-context"),
-  ]);
+  const [download] = await Promise.all([page.waitForEvent("download"), page.click("#export-context")]);
   const bundle = JSON.parse(readFileSync(await download.path(), "utf8"));
   expect(bundle.schema_version).toBe("context-bundle.v1");
   expect(bundle.stats.node_count).toBeGreaterThan(0);

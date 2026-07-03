@@ -41,7 +41,9 @@ async function withTimeout(run, timeoutMs) {
 // Deterministic: echoes the question and cites every source id present in the
 // bundle text, so tests can assert grounded, source-cited output offline.
 function mockComplete(messages, options = {}) {
-  const user = conversation(messages).map((message) => message.content).join("\n");
+  const user = conversation(messages)
+    .map((message) => message.content)
+    .join("\n");
   const questionLine = (user.match(/Question:\s*(.+)/) || [])[1] || "the question";
   const citedIds = [...new Set(user.match(/SRC-[0-9A-Za-z-]+/g) || [])];
   const citations = citedIds.length > 0 ? ` ${citedIds.map((id) => `[${id}]`).join(" ")}` : "";

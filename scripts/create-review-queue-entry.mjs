@@ -26,14 +26,8 @@ async function main() {
   assertQueuePathAllowed(queuePath, allowTestQueue);
 
   const sourceCatalog = await readJson(path.join(root, "sources/catalog.json"), "sources/catalog.json");
-  const preview = validateReviewPacketPreview(
-    await readJson(resolvePath(previewPath), "preview"),
-    sourceCatalog,
-  );
-  const approval = validateHandoffApproval(
-    await readJson(resolvePath(approvalPath), "approval"),
-    preview,
-  );
+  const preview = validateReviewPacketPreview(await readJson(resolvePath(previewPath), "preview"), sourceCatalog);
+  const approval = validateHandoffApproval(await readJson(resolvePath(approvalPath), "approval"), preview);
 
   const absoluteQueuePath = resolvePath(queuePath);
   const queue = validateReviewQueue(await readJson(absoluteQueuePath, queuePath));
@@ -43,12 +37,18 @@ async function main() {
   const item = nextQueue.reviews[nextQueue.reviews.length - 1];
 
   await writeFile(absoluteQueuePath, `${JSON.stringify(nextQueue, null, 2)}\n`, "utf8");
-  process.stdout.write(`${JSON.stringify({
-    review_id: item.id,
-    target_file: item.target_file,
-    risk: item.risk,
-    undo_path: item.undo_path,
-  }, null, 2)}\n`);
+  process.stdout.write(
+    `${JSON.stringify(
+      {
+        review_id: item.id,
+        target_file: item.target_file,
+        risk: item.risk,
+        undo_path: item.undo_path,
+      },
+      null,
+      2,
+    )}\n`,
+  );
 }
 
 function parseArgs(argv) {

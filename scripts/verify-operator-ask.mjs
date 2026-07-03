@@ -53,7 +53,10 @@ const districtId = baseContext.baseModel.districts[0].id;
   for (const id of cited) assert.ok(catalogIds.has(id), `answer cites registered source ${id}`);
 
   // Operations log has exactly one ok line.
-  const log = readFileSync(ws.logPath, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+  const log = readFileSync(ws.logPath, "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line));
   assert.equal(log.length, 1, "one operations log line");
   assert.equal(log[0].result, "ok", "log records success");
   assert.equal(log[0].workflow, "operator-ask", "log workflow");
@@ -85,7 +88,10 @@ const districtId = baseContext.baseModel.districts[0].id;
   assert.equal(runFiles.length, 0, "no partial run packet on failure");
 
   // A failed line was logged (observability), and it is a complete JSON line.
-  const log = readFileSync(ws.logPath, "utf8").trim().split("\n").map((line) => JSON.parse(line));
+  const log = readFileSync(ws.logPath, "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line));
   assert.equal(log.length, 1, "one failed log line");
   assert.equal(log[0].result, "failed", "log records failure");
   assert.ok(log[0].error, "failure reason recorded");
@@ -97,8 +103,24 @@ const districtId = baseContext.baseModel.districts[0].id;
 {
   const wsA = tempWorkspace();
   const wsB = tempWorkspace();
-  const a = await runAsk({ repoRoot: REPO_ROOT, question: "Same question.", region: districtId, provider: "mock", now: NOW, runsDir: wsA.runsDir, logPath: wsA.logPath });
-  const b = await runAsk({ repoRoot: REPO_ROOT, question: "Same question.", region: districtId, provider: "mock", now: NOW, runsDir: wsB.runsDir, logPath: wsB.logPath });
+  const a = await runAsk({
+    repoRoot: REPO_ROOT,
+    question: "Same question.",
+    region: districtId,
+    provider: "mock",
+    now: NOW,
+    runsDir: wsA.runsDir,
+    logPath: wsA.logPath,
+  });
+  const b = await runAsk({
+    repoRoot: REPO_ROOT,
+    question: "Same question.",
+    region: districtId,
+    provider: "mock",
+    now: NOW,
+    runsDir: wsB.runsDir,
+    logPath: wsB.logPath,
+  });
   assert.equal(a.answer, b.answer, "mock answer is deterministic");
   assert.deepEqual(a.runPacket.source_ids, b.runPacket.source_ids, "cited sources are deterministic");
   rmSync(wsA.dir, { recursive: true, force: true });

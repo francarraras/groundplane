@@ -16,7 +16,9 @@ const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..
 // A fetch-like impl that serves repo files for the app's "../<dir>/<file>" URLs.
 function fixtureFetch({ missing = new Set(), throwOn = new Set() } = {}) {
   return async (requestUrl) => {
-    const clean = String(requestUrl).split("?")[0].replace(/^\.\.\//, "");
+    const clean = String(requestUrl)
+      .split("?")[0]
+      .replace(/^\.\.\//, "");
     if (throwOn.has(clean)) throw new Error(`network error for ${clean}`);
     if (missing.has(clean)) return { ok: false, status: 404, json: async () => ({}) };
     const absolute = path.join(REPO_ROOT, clean);

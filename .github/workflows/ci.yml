@@ -60,3 +60,27 @@ jobs:
 
       - name: Fixture-based browser QA (structural invariants + browser-write invariant)
         run: npm run test:browser
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Typecheck (checkJs on scripts/lib)
+        run: npm run typecheck

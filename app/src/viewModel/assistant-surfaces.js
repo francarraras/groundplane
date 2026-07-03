@@ -1,4 +1,4 @@
-import { asArray, command, sortedUnique, taskById } from "./helpers.js";
+import { asArray, sortedUnique, taskById } from "./helpers.js";
 
 export function normalizeAssistantText(value = "") {
   return String(value || "")

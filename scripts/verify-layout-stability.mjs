@@ -51,10 +51,19 @@ for (const node of buildA) {
   assert.equal(twin.position.x, node.position.x, `${node.id} x unchanged after insertion`);
   assert.equal(twin.position.z, node.position.z, `${node.id} z unchanged after insertion`);
 }
-assert.ok(withInsertion.some((node) => node.id === "task:TASK-999-new"), "the new node was placed");
+assert.ok(
+  withInsertion.some((node) => node.id === "task:TASK-999-new"),
+  "the new node was placed",
+);
 
 // --- palette (color + orbit) is index-independent ---------------------------
-const node = { id: "task:TASK-777", type: "task", title: "Test", weights: { importance: 0.5, friction: 0.2 }, visual: {} };
+const node = {
+  id: "task:TASK-777",
+  type: "task",
+  title: "Test",
+  weights: { importance: 0.5, friction: 0.2 },
+  visual: {},
+};
 assert.equal(graphRegion(node, 0).color, graphRegion(node, 99).color, "graph color independent of index");
 assert.equal(graphRegion(node, 0).orbit, graphRegion(node, 99).orbit, "graph orbit independent of index");
 
@@ -69,6 +78,10 @@ const district = {
   approvalStatus: "approved",
   sourceIds: [],
 };
-assert.equal(districtRegion(district, 0).orbit, districtRegion(district, 99).orbit, "district orbit independent of index");
+assert.equal(
+  districtRegion(district, 0).orbit,
+  districtRegion(district, 99).orbit,
+  "district orbit independent of index",
+);
 
 console.log("layout stability ok: insertion moves no node; positions + palette are id-stable and deterministic");
