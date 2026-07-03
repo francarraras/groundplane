@@ -65,13 +65,33 @@ function emptyLayoutOverlay() {
   };
 }
 
+function repoRelative(url) {
+  return String(url).replace(/^\.\.\//, "");
+}
+
+// Graceful degradation (#11): a missing or corrupt file never blanks the app.
+// Each required file loads independently; on failure it falls back to an empty
+// default and records a specific warning, so the rest of the app stays alive
+// and the UI can tell the user exactly what could not be loaded.
 export async function loadProductState(fetchImpl = fetch, options = {}) {
-  const requiredUrls = Object.entries(DATA_URLS).filter(([key]) => !OPTIONAL_KEYS.has(key));
-  const entries = await Promise.all(
-    requiredUrls.map(async ([key, url]) => [
-      key,
-      await fetchJson(fetchImpl, url, options),
-    ]),
+  const loaderWarnings = [];
+
+  const requiredEntries = await Promise.all(
+    Object.entries(DATA_URLS)
+      .filter(([key]) => !OPTIONAL_KEYS.has(key))
+      .map(async ([key, url]) => {
+        try {
+          return [key, await fetchJson(fetchImpl, url, options)];
+        } catch (error) {
+          loaderWarnings.push({
+            key,
+            file: repoRelative(url),
+            message: error instanceof Error ? error.message : String(error),
+            severity: "warning",
+          });
+          return [key, {}];
+        }
+      }),
   );
 
   let relationshipGraph;
@@ -79,18 +99,27 @@ export async function loadProductState(fetchImpl = fetch, options = {}) {
     relationshipGraph = await fetchJson(fetchImpl, DATA_URLS.relationshipGraph, options);
   } catch (error) {
     relationshipGraph = unavailableRelationshipGraph(error);
+    loaderWarnings.push({
+      key: "relationshipGraph",
+      file: repoRelative(DATA_URLS.relationshipGraph),
+      message: error instanceof Error ? error.message : String(error),
+      severity: "warning",
+    });
   }
 
+  // The layout overlay is genuinely optional (user pins); its absence is normal
+  // and does not warrant a warning.
   let layout;
   try {
     layout = await fetchJson(fetchImpl, DATA_URLS.layout, options);
-  } catch (error) {
+  } catch {
     layout = emptyLayoutOverlay();
   }
 
   return {
-    ...Object.fromEntries(entries),
+    ...Object.fromEntries(requiredEntries),
     relationshipGraph,
     layout,
+    loaderWarnings,
   };
 }

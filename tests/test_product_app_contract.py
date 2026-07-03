@@ -1252,6 +1252,25 @@ class ProductAppContractTest(unittest.TestCase):
         css = (APP / "src" / "styles.css").read_text()
         self.assertRegex(css, r"\.map-legend\[data-legend-state=\"closed\"\]\s*\{[\s\S]*display:\s*none")
 
+    def test_state_loader_degrades_gracefully(self):
+        # Issue #11: a missing/corrupt file must not blank the app.
+        state_js = (APP / "src" / "state.js").read_text()
+        self.assertIn("loaderWarnings", state_js)
+        # Each required file is loaded independently and falls back on failure,
+        # rather than one rejection aborting the whole load.
+        self.assertNotIn("await Promise.all(\n    requiredUrls.map", state_js)
+        self.assertIn("return [key, {}]", state_js)
+
+        html = (APP / "index.html").read_text()
+        self.assertIn('id="state-warning"', html)
+
+        main_js = (APP / "src" / "main.js").read_text()
+        self.assertIn("function renderStateWarnings", main_js)
+        self.assertIn("renderStateWarnings(state?.loaderWarnings)", main_js)
+
+        css = (APP / "src" / "styles.css").read_text()
+        self.assertRegex(css, r"\.state-warning\[data-visible=\"false\"\]\s*\{[\s\S]*display:\s*none")
+
 
 if __name__ == "__main__":
     unittest.main()

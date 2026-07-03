@@ -76,13 +76,19 @@ for (const region of model.allRegions) {
   }
 }
 
-// 3) DI seam contract: a required file failing rejects the whole load
-//    (fail-closed), while optional files degrade gracefully.
-await assert.rejects(
-  loadProductState(fixtureFetch({ missing: new Set(["state/board.json"]) }), { cacheBust: false }),
-  /State fetch failed/,
-  "a missing required file rejects the load",
+// 3) Graceful degradation (#11): a missing/corrupt required file never blanks
+//    the app — it falls back to an empty default and records a specific warning,
+//    and the model still builds.
+assert.deepEqual(state.loaderWarnings, [], "a clean load has no loader warnings");
+
+const degradedRequired = await loadProductState(fixtureFetch({ missing: new Set(["state/projects.json"]) }), {
+  cacheBust: false,
+});
+assert.ok(
+  degradedRequired.loaderWarnings.some((warning) => warning.key === "projects" && warning.file === "state/projects.json"),
+  "a missing required file produces a specific, repo-relative loader warning",
 );
+assert.doesNotThrow(() => buildSurfaceModel(degradedRequired), "the model still builds when a required file is missing");
 
 const degraded = await loadProductState(
   fixtureFetch({ throwOn: new Set(["indexes/relationship-graph.json", "state/layout.json"]) }),

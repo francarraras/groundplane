@@ -597,6 +597,22 @@ button {
   box-shadow: 0 0 6px rgba(212, 164, 95, 0.6);
 }
 
+/* State load warning banner (#11) */
+.state-warning {
+  margin: 6px 12px 0;
+  padding: 8px 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(212, 164, 95, 0.5);
+  background: rgba(212, 164, 95, 0.12);
+  color: #f0d9b5;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.state-warning[data-visible="false"] {
+  display: none;
+}
+
 .world-labels {
   inset: 0;
   z-index: 4;

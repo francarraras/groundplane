@@ -38,6 +38,7 @@ const elements = {
   relationNext: document.querySelector("#relation-next-world"),
   mapLegend: document.querySelector("#map-legend"),
   legendToggle: document.querySelector("#legend-toggle"),
+  stateWarning: document.querySelector("#state-warning"),
 };
 
 let baseModel = null;
@@ -658,12 +659,31 @@ function errorMessage(error) {
   return error instanceof Error ? error.message : String(error || "Unknown boot error");
 }
 
+// Graceful degradation (#11): surface a specific, visible warning when some
+// state failed to load, without blanking the app.
+function renderStateWarnings(warnings = []) {
+  const banner = elements.stateWarning;
+  if (!banner) return;
+
+  const items = asArray(warnings);
+  if (items.length === 0) {
+    banner.dataset.visible = "false";
+    banner.textContent = "";
+    return;
+  }
+
+  const files = items.map((warning) => warning.file || warning.key).join(", ");
+  banner.dataset.visible = "true";
+  banner.textContent = `Some state could not be loaded (${files}). The map is running with partial data.`;
+}
+
 async function boot() {
   if (!elements.worldRoot) {
     throw new Error("Product app is missing #world-root");
   }
 
   const state = await loadProductState();
+  renderStateWarnings(state?.loaderWarnings);
   sourceCatalog = asArray(state?.sources?.sources);
   baseModel = buildSurfaceModel(state);
   activeDistrictId = null;
