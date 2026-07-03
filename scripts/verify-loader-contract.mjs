@@ -10,6 +10,7 @@ import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
 import { loadProductState } from "../app/src/state.js";
 import { buildSurfaceModel } from "../app/src/viewModel.js";
+import { renderMapLegend, NODE_TYPE_REGISTRY } from "../app/src/mapLegend.js";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -100,6 +101,19 @@ const rendered = JSON.stringify(model);
 assert.doesNotMatch(rendered, /\/Users\//, "no /Users/ path renders in the model");
 assert.doesNotMatch(rendered, /\/home\/[^"/]+\//, "no /home/<user>/ path renders in the model");
 assert.doesNotMatch(rendered, /[A-Za-z]:\\\\/, "no Windows absolute path renders in the model");
+
+// 5) Map legend (#13) reflects exactly the node types present in the graph.
+const legendRoot = { innerHTML: "" };
+renderMapLegend(legendRoot, model);
+const presentTypes = new Set([
+  ...model.regions.map((region) => region.type),
+  ...(model.graph?.nodes || []).map((node) => node.type),
+]);
+for (const entry of NODE_TYPE_REGISTRY) {
+  const shown = legendRoot.innerHTML.includes(`data-legend-type="${entry.type}"`);
+  assert.equal(shown, presentTypes.has(entry.type), `legend row for ${entry.type} is shown iff the type is present`);
+}
+assert.ok(legendRoot.innerHTML.includes("map-legend-panel"), "legend renders a panel when types are present");
 
 console.log(
   `loader contract ok: ${model.districts.length} areas, ${expectedActiveTasks} active tasks, ${expectedPending} pending reviews — all derived from fixtures`,

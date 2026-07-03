@@ -36,6 +36,8 @@ const elements = {
   orbitRight: document.querySelector("#orbit-right-world"),
   relationPrev: document.querySelector("#relation-prev-world"),
   relationNext: document.querySelector("#relation-next-world"),
+  mapLegend: document.querySelector("#map-legend"),
+  legendToggle: document.querySelector("#legend-toggle"),
 };
 
 let baseModel = null;
@@ -49,6 +51,7 @@ let latestWorldLabels = [];
 let activeReviewDraftPreview = null;
 let activeProofLauncherId = null;
 let inspectorCollapsed = true;
+let legendOpen = false;
 let sourceCatalog = [];
 
 function asArray(value) {
@@ -585,6 +588,16 @@ function exportContextBundle() {
 }
 
 elements.exportContext?.addEventListener("click", exportContextBundle);
+
+// Map legend (#13): a toggleable, data-driven key for the map's visual language.
+elements.legendToggle?.addEventListener("click", () => {
+  legendOpen = !legendOpen;
+  if (elements.mapLegend) {
+    elements.mapLegend.dataset.legendState = legendOpen ? "open" : "closed";
+    elements.mapLegend.setAttribute("aria-hidden", legendOpen ? "false" : "true");
+  }
+  elements.legendToggle.setAttribute("aria-pressed", legendOpen ? "true" : "false");
+});
 elements.atlasHome?.addEventListener("click", goAtlasHome);
 elements.home?.addEventListener("click", goAtlasHome);
 elements.runCurrentBlock?.addEventListener("click", startCurrentStep);

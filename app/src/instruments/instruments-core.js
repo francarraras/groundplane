@@ -2,6 +2,7 @@ import { assistantBriefAria, assistantMiniLabel, renderSpatialCommandOverlay } f
 import { renderCommandDeck } from "./command-deck.js";
 import { asArray, escapeHtml, pluralize, publicCountLabel, publicSubtitle, publicText, publicTitle, pulseLabel, safeColor, selectedRegion, truncateText } from "./helpers.js";
 import { relationshipById, relationshipsForRegion } from "./relationships.js";
+import { renderMapLegend } from "../mapLegend.js";
 
 const ATLAS_RAIL_REST_LIMIT = 7;
 
@@ -368,6 +369,7 @@ export function renderInstruments(elements, model, selectedId, selectedRelations
 
   renderSpatialCommandOverlay(elements?.spatialCommandOverlay, model?.spatialCommandOverlay);
   renderWorldOrientation(elements?.worldOrientation, model, selectedId);
+  renderMapLegend(elements?.mapLegend, model);
   renderRegionList(elements?.regionList, model, selectedId);
   renderInspector(elements?.inspector, model, selectedId, selectedRelationshipId, reviewDraftPreview);
 }

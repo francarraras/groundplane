@@ -1231,6 +1231,27 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIn("URL.revokeObjectURL", main_js)
         self.assertIn('elements.exportContext?.addEventListener("click", exportContextBundle)', main_js)
 
+    def test_map_legend_is_data_driven(self):
+        # Issue #13: a toggleable legend, data-driven from the node-type registry.
+        html = (APP / "index.html").read_text()
+        self.assertIn('id="map-legend"', html)
+        self.assertIn('id="legend-toggle"', html)
+
+        legend = (APP / "src" / "mapLegend.js").read_text()
+        self.assertIn("NODE_TYPE_REGISTRY", legend)
+        self.assertIn("export function renderMapLegend", legend)
+        self.assertIn("map-legend-panel", legend)
+        # Data-driven: only types present in the loaded graph are shown.
+        self.assertIn("present.has(entry.type)", legend)
+
+        main_js = (APP / "src" / "main.js").read_text()
+        self.assertIn("renderMapLegend", (APP / "src" / "instruments" / "instruments-core.js").read_text())
+        self.assertIn("dataset.legendState", main_js)
+        self.assertIn("elements.legendToggle", main_js)
+
+        css = (APP / "src" / "styles.css").read_text()
+        self.assertRegex(css, r"\.map-legend\[data-legend-state=\"closed\"\]\s*\{[\s\S]*display:\s*none")
+
 
 if __name__ == "__main__":
     unittest.main()
