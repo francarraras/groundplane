@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "groundplane/memory-claims.schema.json",
+  "title": "Memory claims file",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "memory_claims"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "memory_claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["id", "claim", "type", "status", "source_ids"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^MC-" },
+          "claim": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "minLength": 1 },
+          "approval_status": { "type": "string" },
+          "source_ids": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^SRC-" }
+          }
+        }
+      }
+    }
+  }
+}

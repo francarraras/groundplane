@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "groundplane/tasks.schema.json",
+  "title": "Tasks state file",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tasks"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["id", "title", "status", "source_ids"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^TASK-" },
+          "project_id": { "type": "string", "pattern": "^PROJ-" },
+          "title": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "minLength": 1 },
+          "blocked_by": { "type": "array", "items": { "type": "string" } },
+          "source_ids": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^SRC-" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -5,8 +5,11 @@ import {
   loadGraphInputs,
   writeRelationshipGraph,
 } from "./lib/relationship-graph.mjs";
+import { assertWorkspaceSchemas } from "./lib/validate-state.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+// Fail fast on malformed state before compiling the graph (#21).
+assertWorkspaceSchemas(root);
 const inputs = await loadGraphInputs(root);
 const graph = buildRelationshipGraph(inputs);
 

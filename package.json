@@ -14,6 +14,7 @@
     "app:build": "vite build",
     "app:preview": "vite preview --host 127.0.0.1",
     "graph:build": "node scripts/build-relationship-graph.mjs",
+    "test:schemas": "node scripts/verify-schemas.mjs",
     "test:python": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests",
     "test:graph": "node scripts/verify-relationship-graph.mjs",
     "test:product-world": "node scripts/verify-product-world-model.mjs",
@@ -25,13 +26,14 @@
     "test:operator-propose": "node scripts/verify-operator-propose.mjs",
     "operator": "node packages/operator/cli.js",
     "leak:scan": "node scripts/leak-scan.mjs",
-    "verify:local": "npm run graph:build && npm run test:python && npm run test:product-world && npm run test:loader-contract && npm run test:layout-stability && npm run test:graph && npm run test:context-bundle && npm run test:operator && npm run test:operator-propose && npm run leak:scan && npm run app:build"
+    "verify:local": "npm run test:schemas && npm run graph:build && npm run test:python && npm run test:product-world && npm run test:loader-contract && npm run test:layout-stability && npm run test:graph && npm run test:context-bundle && npm run test:operator && npm run test:operator-propose && npm run leak:scan && npm run app:build"
   },
   "dependencies": {
     "three": "^0.184.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",
+    "ajv": "^8.20.0",
     "vite": "^8.0.16"
   }
 }

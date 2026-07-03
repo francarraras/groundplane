@@ -182,6 +182,7 @@ export function appendReviewItemForPreview(queue, preview, approval, options = {
     fail(`Preview ${preview.id} is already queued`);
   }
   return {
+    ...queue,
     reviews: [
       ...queue.reviews,
       reviewItemFromPreview(preview, approval, options),
