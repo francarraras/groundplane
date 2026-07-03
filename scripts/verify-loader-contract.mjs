@@ -85,10 +85,15 @@ const degradedRequired = await loadProductState(fixtureFetch({ missing: new Set(
   cacheBust: false,
 });
 assert.ok(
-  degradedRequired.loaderWarnings.some((warning) => warning.key === "projects" && warning.file === "state/projects.json"),
+  degradedRequired.loaderWarnings.some(
+    (warning) => warning.key === "projects" && warning.file === "state/projects.json",
+  ),
   "a missing required file produces a specific, repo-relative loader warning",
 );
-assert.doesNotThrow(() => buildSurfaceModel(degradedRequired), "the model still builds when a required file is missing");
+assert.doesNotThrow(
+  () => buildSurfaceModel(degradedRequired),
+  "the model still builds when a required file is missing",
+);
 
 const degraded = await loadProductState(
   fixtureFetch({ throwOn: new Set(["indexes/relationship-graph.json", "state/layout.json"]) }),
