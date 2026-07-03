@@ -17,6 +17,7 @@
     "test:schemas": "node scripts/verify-schemas.mjs",
     "test:python": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests",
     "test:graph": "node scripts/verify-relationship-graph.mjs",
+    "test:graph-determinism": "node scripts/verify-graph-determinism.mjs",
     "test:product-world": "node scripts/verify-product-world-model.mjs",
     "test:loader-contract": "node scripts/verify-loader-contract.mjs",
     "test:layout-stability": "node scripts/verify-layout-stability.mjs",
@@ -30,7 +31,7 @@
     "format:check": "prettier --check \"**/*.{js,mjs,json}\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "leak:scan": "node scripts/leak-scan.mjs",
-    "verify:local": "npm run test:schemas && npm run graph:build && npm run test:python && npm run test:product-world && npm run test:loader-contract && npm run test:layout-stability && npm run test:graph && npm run test:context-bundle && npm run test:operator && npm run test:operator-propose && npm run leak:scan && npm run app:build"
+    "verify:local": "npm run test:schemas && npm run graph:build && npm run test:python && npm run test:product-world && npm run test:loader-contract && npm run test:layout-stability && npm run test:graph && npm run test:graph-determinism && npm run test:context-bundle && npm run test:operator && npm run test:operator-propose && npm run leak:scan && npm run app:build"
   },
   "dependencies": {
     "three": "^0.184.0"
