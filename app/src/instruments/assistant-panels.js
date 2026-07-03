@@ -178,13 +178,13 @@ export function renderBrainAssistantBehavior(panel = null) {
       class="brain-assistant-panel"
       data-brain-assistant-id="${escapeHtml(panel.id || "brain-assistant-behavior")}"
       data-browser-writes="${panel.browserWrites === true ? "true" : "false"}"
-      aria-label="${escapeHtml(`${panel.title || "Brain Assistant Behavior"}. Recommended move: ${recommendedMove}`)}"
+      aria-label="${escapeHtml(`${panel.title || "Operator"}. Recommended move: ${recommendedMove}`)}"
     >
       <div class="brain-assistant-head">
         <div>
-          <p class="section-kicker">Brain / Assistant</p>
-          <h3 title="${escapeHtml(panel.title || "Brain / Assistant Behavior")}">${escapeHtml(
-            truncateText(publicText(panel.title || "Brain / Assistant Behavior"), 42),
+          <p class="section-kicker">Operator</p>
+          <h3 title="${escapeHtml(panel.title || "Operator")}">${escapeHtml(
+            truncateText(publicText(panel.title || "Operator"), 42),
           )}</h3>
         </div>
         ${pill(panel.mode || "read-only")}
@@ -237,7 +237,7 @@ export function renderSystemHomeCockpit(cockpit = null) {
         <span>Today</span>
         <span>Projects</span>
         <span>Approvals</span>
-        <span>Brain</span>
+        <span>Operator</span>
         <span>Routines</span>
         <span>Assistant</span>
         <em>Next safe action</em>
@@ -258,7 +258,7 @@ export function renderSystemHomeCockpit(cockpit = null) {
           <span>Today</span>
           <span>Projects</span>
           <span>Approvals</span>
-          <span>Brain</span>
+          <span>Operator</span>
           <span>Routines</span>
           <span>Assistant</span>
         </div>

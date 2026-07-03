@@ -368,7 +368,7 @@ class ProductAppContractTest(unittest.TestCase):
         self.assertIn("Today", view_model)
         self.assertIn("Projects", view_model)
         self.assertIn("Approvals", view_model)
-        self.assertIn("Brain", view_model)
+        self.assertIn("Operator", view_model)
         self.assertIn("Routines", view_model)
         self.assertIn("Assistant", view_model)
         self.assertIn("renderSystemHomeCockpit", instruments)

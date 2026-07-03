@@ -187,7 +187,7 @@ export function buildSystemHomeCockpit({
       },
       {
         id: "brain",
-        title: "Brain",
+        title: "Operator",
         status: graphWarnings.length > 0 ? "check" : "indexed",
         signal: `${areaCount} areas / ${connectionCount} connections`,
         detail: graphWarnings.length > 0 ? `${graphWarnings.length} graph warning${graphWarnings.length === 1 ? "" : "s"}` : "Local graph index is readable.",
@@ -208,7 +208,7 @@ export function buildSystemHomeCockpit({
       },
     ],
     nextSafeAction:
-      "Use Home to review Today, Projects, Approvals, Brain, Routines, and Assistant, then choose the next local slice from Next steps.",
+      "Use Home to review Today, Projects, Approvals, Operator, Routines, and Assistant, then choose the next local slice from Next steps.",
     approvalBoundary:
       "Read-only Home cockpit. No browser writes, No reviews mutation, No source/wiki/memory/raw-source mutation, No GitHub, No Linear, No external action, No finance, No contacts, and No Flagship Project reads or writes without separate approval.",
   };
@@ -317,7 +317,7 @@ export function buildBrainAssistantBehavior({
 
   return {
     id: "brain-assistant-behavior",
-    title: "Brain / Assistant Behavior",
+    title: "Operator",
     subtitle: "Read-only local reasoning surface",
     mode: "read-only",
     browserWrites: false,

@@ -21,6 +21,20 @@ flowchart LR
 **Authored** (source of truth, human- or gate-written): everything under `state/`, `sources/`, `reviews/`, `wiki/`, `logs/`, `runs/`.
 **Generated** (pure function of authored files): everything under `indexes/`. Never edit by hand; CI rebuilds and diffs it.
 
+## Vocabulary (one metaphor)
+
+User-facing copy uses a single frame — a read-only **cockpit** over an **atlas** of **areas**. Internal identifiers keep their original names; the public-wording layer (`app/src/publicText.js`) rewrites the rest at render time, so the naming pass has one file to change.
+
+| Internal term | User-facing term | Where enforced |
+|---|---|---|
+| district / region | area | `publicText.js` (render-time rewrite) |
+| node | item | `publicText.js` |
+| relationship / relation | connection | `publicText.js` |
+| Brain / Assistant panel | Operator | renamed in the rendered copy |
+| atlas / cockpit | atlas / cockpit (kept — the map and its shell) | — |
+
+New UI copy should route domain nouns through `publicText()` and label the reasoning surface "Operator"; never introduce "brain" or "district" into visible text.
+
 ## Modules
 
 | Module | Role | Notes |
